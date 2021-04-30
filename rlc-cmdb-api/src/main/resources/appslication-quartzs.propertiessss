@@ -1,0 +1,30 @@
+################ quartz集群配置
+# 设置quartz任务的数据持久化方式，默认是内存方式，配置JDBC以使用数据库方式持久化任务
+spring.quartz.job-store-type=jdbc
+# 调度标识名 集群中每一个实例都必须使用相同的名称
+spring.quartz.properties.org.quartz.scheduler.instanceName=ComplianceAuditQuartzScheduler
+# ID设置为自动获取 每一个必须不同
+spring.quartz.properties.org.quartz.scheduler.instanceId=AUTO
+spring.quartz.properties.org.quartz.scheduler.makeSchedulerThreadDaemon=true
+# 线程池的实现类（一般使用SimpleThreadPool即可满足需求）
+spring.quartz.properties.org.quartz.threadPool.class=org.quartz.simpl.SimpleThreadPool
+# 指定在线程池里面创建的线程是否是守护线程
+spring.quartz.properties.org.quartz.threadPool.makeThreadsDaemons=true
+# 指定线程数，至少为1（无默认值）
+spring.quartz.properties.org.quartz.threadPool.threadCount:10
+# 设置线程的优先级（最大为java.lang.Thread.MAX_PRIORITY 10，最小为Thread.MIN_PRIORITY 1，默认为5）
+spring.quartz.properties.org.quartz.threadPool.threadPriority:5
+# 自创建父线程
+spring.quartz.properties.org.quartz.threadPool.threadsInheritContextClassLoaderOfInitializingThread=true
+# 数据保存方式为数据库持久化
+spring.quartz.properties.org.quartz.jobStore.class=org.quartz.impl.jdbcjobstore.JobStoreTX
+# 数据库代理类，一般org.quartz.impl.jdbcjobstore.StdJDBCDelegate可以满足大部分数据库
+spring.quartz.properties.org.quartz.jobStore.driverDelegateClass=org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+# 表的前缀，默认QRTZ_
+spring.quartz.properties.org.quartz.jobStore.tablePrefix=QRTZ_
+# 是否加入集群
+spring.quartz.properties.org.quartz.jobStore.isClustered=true
+# 检入到数据库中的频率(单位毫秒)。clusterChedkinInterval越小，Scheduler节点检查失败的 Scheduler实例就越频繁。默认值是 15000(即15秒)。
+spring.quartz.properties.org.quartz.jobStore.clusterCheckinInterval=20000
+# 设置调度引擎对触发器超时的忍耐时间 (单位毫秒)
+spring.quartz.properties.org.quartz.jobStore.misfireThreshold=60000
