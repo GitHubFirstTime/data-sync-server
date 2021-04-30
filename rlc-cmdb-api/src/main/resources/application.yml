@@ -4,3 +4,14 @@ spring:
 
 logging:
   config: classpath:log4j2.xml
+
+#指定映射xml文件位置
+#classpath对应resource，*.xml表示配置mapper下所有xml文件
+mybatis:
+  #  config-location: classpath:/mybatis/mybatis-config.xml
+  mapper-locations: classpath:/mappings/modules/*/*.xml
+  # 注意：对应实体类的路径
+  type-aliases-package: com.rlc.cmdbServer.modules.fmb.entity,com.rlc.cmdbServer.modules.cmdb.entity
+    # 支持通过 Mapper 接口参数来传递分页参数
+  configuration:
+      log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

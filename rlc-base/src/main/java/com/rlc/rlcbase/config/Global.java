@@ -7,8 +7,10 @@ import com.google.common.collect.Maps;
 import com.rlc.rlcbase.common.PropertiesLoader;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.io.Resources;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -22,7 +24,9 @@ import java.util.Properties;
  * @author xx
  * @version 2014-06-25
  */
-@PropertySource("classpath:cmdbServer.properties")
+@Component
+@ConfigurationProperties(prefix = "fmb")
+@PropertySource("classpath:/cmdbServer.properties")
 public class Global {
 
 	/**

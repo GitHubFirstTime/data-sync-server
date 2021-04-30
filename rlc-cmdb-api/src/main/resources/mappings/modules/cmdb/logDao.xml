@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlc.rlccmdbapi.modules.test.dao.LogDao">
+<!--    <select id="getSaleList">
+        select  b.*
+        from
+        (
+        select ROWNUM as rnum,
+        a.*
+        from sys_log a
+        where 1=1
+        <if test="cstName!=null and cstName!=''">
+            and cstname=#{cstName}
+        </if>
+        and rownum &lt;= #{end}
+        ) b
+        where
+        rnum &gt;= #{start}
+    </select>-->
+    <select id="findList" resultType="com.rlc.rlccmdbapi.modules.test.entity.Log">
+        SELECT
+        a.id,
+        a.title
+        FROM sys_log a
+        WHERE a.create_date BETWEEN #{beginDate} AND #{endDate}
+        <if test="title != null and title != ''">
+            AND a.title LIKE
+            <if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+            <if test="dbName == 'mysql'">CONCAT('%', #{title}, '%')</if>
+        </if>
+
+        <if test="requestUri != null and requestUri != ''">
+            AND a.request_uri LIKE
+            <if test="dbName == 'oracle'">'%'||#{requestUri}||'%'</if>
+            <if test="dbName == 'mysql'">CONCAT('%', #{requestUri}, '%')</if>
+        </if>
+        <if test="exception != null and exception != ''">
+            AND a.type = #{TYPE_EXCEPTION}
+        </if>
+        ORDER BY a.create_date DESC
+    </select>
+</mapper>

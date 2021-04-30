@@ -20,7 +20,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 @Configuration
-@MapperScan(basePackages = {"com.rlc.cmdbServer.modules.fmb.dao","com.rlc.cmdbServer.modules.test.dao"}, sqlSessionFactoryRef = "fmbSqlSessionFactory")
+@MapperScan(basePackages = {"com.rlc.rlccmdbapi.modules.biz.dao"}, sqlSessionFactoryRef = "fmbSqlSessionFactory")
 public class DataSourceConfig_fmbDB {
     @Bean("fmbDataSource")
 //    @ConfigurationProperties(prefix = "spring.datasource.fmbdb")
