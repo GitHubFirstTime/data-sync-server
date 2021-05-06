@@ -3,6 +3,15 @@ quartz:
   properties:
     org:
       quartz:
+        datasource: #配置数据库源（org.quartz.dataSource.qzDS.maxConnections: c3p0配置的是有s的，druid数据源没有s）
+          qzDS:
+            connectionProvider:
+              class: com.cbw.quartz02.util.DruidConnectionProvider
+            driver: com.mysql.jdbc.Driver
+            URL: jdbc:mysql://192.168.31.5:3306/ry?useUnicode=true&characterEncoding=utf8
+            user: root
+            password: 123456
+            maxConnection: 10
         scheduler:
           instanceName: clusteredScheduler #调度器的实例名
           instanceId: AUTO #调度器编号自动生成
@@ -22,3 +31,6 @@ quartz:
           makeThreadsDaemons: true # 指定在线程池里面创建的线程是否是守护线程
   #数据库方式
   job-store-type: jdbc
+  #初始化表结构
+  jdbc:
+  initialize-schema: never

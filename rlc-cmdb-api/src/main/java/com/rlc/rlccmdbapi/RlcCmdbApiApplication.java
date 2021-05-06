@@ -7,6 +7,7 @@ import cn.hutool.core.util.NumberUtil;
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
 import com.rlc.rlccmdbapi.modules.datasource.prop.DBConfig_CMDB;
 import com.rlc.rlccmdbapi.modules.datasource.prop.DBConfig_FMB;
+import com.rlc.rlccmdbapi.modules.datasource.prop.DBConfig_RYVDB;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,15 +21,16 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-@SpringBootApplication(exclude = {DruidDataSourceAutoConfigure.class, DataSourceTransactionManagerAutoConfiguration.class})
+@SpringBootApplication(exclude = {DruidDataSourceAutoConfigure.class, DataSourceTransactionManagerAutoConfiguration.class},
+scanBasePackages = {"com.rlc.rlcbase","com.rlc.rlccmdbapi"})
 //@MapperScan({"com.rlc.cmdbServer.modules.test.dao","com.rlc.cmdbServer.modules.cmdb.dao"})
-@EnableConfigurationProperties({DBConfig_CMDB.class, DBConfig_FMB.class})
+@EnableConfigurationProperties({DBConfig_CMDB.class, DBConfig_FMB.class, DBConfig_RYVDB.class})
 public class RlcCmdbApiApplication {
 
     public static void main(String[] args) {
 //        SpringApplication.run(RlcCmdbApiApplication.class, args);
         int port = 0;
-        int defaultPort = 8090;
+        int defaultPort = 8099;
         Future<Integer> future = ThreadUtil.execAsync(() ->{
             int p = 0;
             System.out.println("请于5秒钟内输入端口号, 推荐  8001 、 8002  或者  8003，超过5秒将默认使用 " + defaultPort);
