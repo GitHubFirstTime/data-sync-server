@@ -26,6 +26,7 @@ public class DataSourceConfig_fmbDB {
 //    @ConfigurationProperties(prefix = "spring.datasource.fmbdb")
     public DataSource getmesDataSource(DBConfig_FMB fmbDBConfig) throws SQLException {
 //        return DataSourceBuilder.create().build();
+        //创建xa datasource
         MysqlXADataSource mysqlXaDataSource = new MysqlXADataSource();
         mysqlXaDataSource.setUrl(fmbDBConfig.getUrl());
         mysqlXaDataSource.setPinGlobalTxToPhysicalConnection(true);
@@ -33,14 +34,19 @@ public class DataSourceConfig_fmbDB {
         mysqlXaDataSource.setUser(fmbDBConfig.getUsername());
         mysqlXaDataSource.setPinGlobalTxToPhysicalConnection(true);
 
+        //2.注册到我们全局事务上
         AtomikosDataSourceBean xaDataSource = new AtomikosDataSourceBean();
         xaDataSource.setXaDataSource(mysqlXaDataSource);
+        xaDataSource.setMinPoolSize(fmbDBConfig.getMinPoolSize());
+        xaDataSource.setMaxPoolSize(fmbDBConfig.getMaxPoolSize());
+        xaDataSource.setMaintenanceInterval(fmbDBConfig.getMaintenanceInterval());
+        xaDataSource.setMaxIdleTime(fmbDBConfig.getMaxIdleTime());
         xaDataSource.setUniqueResourceName("fmbDataSource");
         return xaDataSource;
     }
 
     @Bean("fmbSqlSessionFactory")
-    public SqlSessionFactory cmdbDBSqlSessionFactory(@Qualifier("fmbDataSource") DataSource dataSource) throws Exception {
+    public SqlSessionFactory fmbSqlSessionFactory(@Qualifier("fmbDataSource") DataSource dataSource) throws Exception {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
         PaginationInterceptor paginationInterceptor = new PaginationInterceptor();
         Properties properties = new Properties();
@@ -49,10 +55,10 @@ public class DataSourceConfig_fmbDB {
         paginationInterceptor.setProperties(properties);
         bean.setPlugins(paginationInterceptor);
         bean.setTypeAliases(Page.class);
-        bean.setTypeAliasesPackage("com.rlc.cmdbServer.modules.fmb.entity");
+        bean.setTypeAliasesPackage("com.rlc.rlccmdbapi.modules.cmdb.entity");
         bean.setTypeHandlers(new ConvertBlobTypeHandler());
         bean.setDataSource(dataSource);
-        bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath*:mappings/modules/fmb/*.xml"));
+        bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath*:mappings/modules/cmdb/*.xml"));
         return bean.getObject();
     }
     /*

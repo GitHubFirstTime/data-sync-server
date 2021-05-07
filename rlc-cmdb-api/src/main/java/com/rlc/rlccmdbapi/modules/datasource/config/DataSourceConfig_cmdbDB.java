@@ -1,6 +1,9 @@
 package com.rlc.rlccmdbapi.modules.datasource.config;
 
 import com.alibaba.druid.pool.xa.DruidXADataSource;
+import com.atomikos.icatch.jta.UserTransactionImp;
+import com.atomikos.icatch.jta.UserTransactionManager;
+import com.mysql.cj.jdbc.MysqlXADataSource;
 import com.rlc.rlcbase.pageHelper.page.Page;
 import com.rlc.rlcbase.persistence.interceptor.PaginationInterceptor;
 import com.rlc.rlcbase.persistence.typeHandler.ConvertBlobTypeHandler;
@@ -9,28 +12,33 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.jta.atomikos.AtomikosDataSourceBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.jta.JtaTransactionManager;
 
 import javax.sql.DataSource;
+import javax.transaction.UserTransaction;
 import java.sql.SQLException;
 import java.util.Properties;
 
 @Configuration
-@MapperScan(basePackages = {"com.rlc.rlccmdbapi.modules.biz.dao",",com.rlc.rlccmdbapi.modules.test.dao"}, sqlSessionFactoryRef = "cmdbDBSqlSessionFactory",annotationClass = com.rlc.rlcbase.persistence.annotation.MyBatisDao.class)
+@MapperScan(basePackages = {"com.rlc.rlccmdbapi.modules.test.dao"}, sqlSessionFactoryRef = "cmdbDBSqlSessionFactory",annotationClass = com.rlc.rlcbase.persistence.annotation.MyBatisDao.class)
+//@DependsOn("transactionManager")
 public class DataSourceConfig_cmdbDB {
 
     @Primary // 表示这个数据源是默认数据源, 这个注解必须要加，因为不加的话spring将分不清楚那个为主数据源（默认数据源）
     @Bean("cmdbDataSource")
 //    @ConfigurationProperties(prefix = "spring.datasource.cmdbdb") //读取application.yml中的配置参数映射成为一个对象
-    public DataSource getMesDataSource(DBConfig_CMDB dbConfigCmdb) throws SQLException {
-        DataSource d = DataSourceBuilder.create().build();
+    public DataSource getCmdbDataSource(DBConfig_CMDB dbConfigCmdb) throws SQLException {
+//        DataSource d = DataSourceBuilder.create().build();
 //        return DataSourceBuilder.create().build();
         //Atomikos统一管理分布式事务
         AtomikosDataSourceBean xaDataSource = new AtomikosDataSourceBean();
@@ -42,17 +50,23 @@ public class DataSourceConfig_cmdbDB {
 //        xaDataSource.setXaProperties ( p );
 
         //用druidXADataSource方式或者上面的Properties方式都可以
-        DruidXADataSource druidXADataSource = new DruidXADataSource();
-        druidXADataSource.setUrl(dbConfigCmdb.getUrl());
-        druidXADataSource.setUsername(dbConfigCmdb.getUsername());
-        druidXADataSource.setPassword(dbConfigCmdb.getPassword());
+//        DruidXADataSource druidXADataSource = new DruidXADataSource();
+//        druidXADataSource.setUrl(dbConfigCmdb.getUrl());
+//        druidXADataSource.setUsername(dbConfigCmdb.getUsername());
+//        druidXADataSource.setPassword(dbConfigCmdb.getPassword());
 
+
+        MysqlXADataSource mysqlXaDataSource = new MysqlXADataSource();
+        mysqlXaDataSource.setUrl(dbConfigCmdb.getUrl());
+        mysqlXaDataSource.setPinGlobalTxToPhysicalConnection(true);
+        mysqlXaDataSource.setPassword(dbConfigCmdb.getPassword());
+        mysqlXaDataSource.setUser(dbConfigCmdb.getUsername());
+
+        xaDataSource.setXaDataSource(mysqlXaDataSource);
         xaDataSource.setUniqueResourceName("cmdbDataSource");
-        xaDataSource.setXaDataSource(druidXADataSource);
-        xaDataSource.setXaDataSourceClassName("com.alibaba.druid.pool.xa.DruidXADataSource");
-        xaDataSource.setMaxLifetime(dbConfigCmdb.getMaxLifetime());
         xaDataSource.setMinPoolSize(dbConfigCmdb.getMinPoolSize());
         xaDataSource.setMaxPoolSize(dbConfigCmdb.getMaxPoolSize());
+        xaDataSource.setMaxLifetime(dbConfigCmdb.getMaxLifetime());
         xaDataSource.setBorrowConnectionTimeout(dbConfigCmdb.getBorrowConnectionTimeout());
         xaDataSource.setLoginTimeout(dbConfigCmdb.getLoginTimeout());
         xaDataSource.setMaintenanceInterval(dbConfigCmdb.getMaintenanceInterval());
@@ -82,9 +96,20 @@ public class DataSourceConfig_cmdbDB {
     /*
      * @methodDesc: 功能描述:(test2 事物管理)
      */
-    @Bean(name = "mesTransactionManager")
-    public DataSourceTransactionManager mesTransactionManager(@Qualifier("cmdbDataSource") DataSource dataSource) {
+ /*   @Primary
+    @Bean(name = "cmdbTransactionManager")
+    public DataSourceTransactionManager cmdbTransactionManager(@Qualifier("cmdbDataSource") DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
+    }*/
+    /*
+     * 注意：【使用这个来做总事务 后面的数据源就不用设置事务了】
+     * */
+    @Bean(name = "transactionManager")
+    @Primary
+    public JtaTransactionManager regTransactionManager () {
+        UserTransactionManager userTransactionManager = new UserTransactionManager();
+        UserTransaction userTransaction = new UserTransactionImp();
+        return new JtaTransactionManager(userTransaction, userTransactionManager);
     }
     @Primary
     @Bean("cmdbSqlSessionTemplate")

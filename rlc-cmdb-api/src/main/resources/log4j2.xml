@@ -7,7 +7,7 @@
     <!--变量配置-->
     <Properties>
         <!-- <property name="webApp.root" value="${web:attr.name}" /> -->
-        <property name="webApp.root" value="../cmdb-data-sync-server" />
+        <property name="webApp.root" value="../data-sync-server-log" />
         <!-- 格式化输出：%date表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度 %msg：日志消息，%n是换行符-->
         <!-- %logger{36} 表示 Logger 名字最长36个字符 -->
         <property name="LOG_PATTERN" value="%date{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n" />
@@ -16,7 +16,7 @@
         <!-- <property name="FILE_PATH" value="${sys:catalina.home}/logs" /> -->
         <property name="FILE_PATH" value="${webApp.root}" />
         <!-- 更换为你的项目名 -->
-        <property name="FILE_NAME" value="cmdbDataSyncServer" />
+        <property name="FILE_NAME" value="DataSyncServer" />
     </Properties>
 
     <appenders>
@@ -29,9 +29,9 @@
         </console>
 
         <!--文件会打印出所有信息，这个log每次运行程序会自动清空，由append属性决定，适合临时测试用-->
-        <File name="Filelog" fileName="${FILE_PATH}/test.log" append="false">
+       <!-- <File name="Filelog" fileName="${FILE_PATH}/test.log" append="false">
             <PatternLayout pattern="${LOG_PATTERN}"/>
-        </File>
+        </File>-->
 
         <!-- 这个会打印出所有的info及以下级别的信息，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档-->
         <RollingFile name="RollingFileInfo" fileName="${FILE_PATH}/info.log" filePattern="${FILE_PATH}/${FILE_NAME}-INFO-%d{yyyy-MM-dd}_%i.log.gz">
@@ -93,7 +93,7 @@
         <logger name="java.sql.Statement" level="DEBUG" additivity="true" />
         <logger name="java.sql.PreparedStatement" level="=debug,stdout"  additivity="true"/>
         <logger name="java.sql.ResultSet" level="DEBUG"  additivity="true"/>
-        <logger name="com.rlc.cmdbServer.modules.*.dao" level="DEBUG" additivity="true">
+        <logger name="com.rlc.rlccmdbapi.modules.*.dao" level="DEBUG" additivity="true">
             <Root level="debug">
                 <AppenderRef ref="console" />
             </Root>
@@ -110,7 +110,7 @@
 
         <root level="debug">
             <appender-ref ref="Console"/>
-            <appender-ref ref="Filelog"/>
+            <!--<appender-ref ref="Filelog"/>-->
             <appender-ref ref="RollingFileInfo"/>
             <appender-ref ref="RollingFileWarn"/>
             <appender-ref ref="RollingFileError"/>

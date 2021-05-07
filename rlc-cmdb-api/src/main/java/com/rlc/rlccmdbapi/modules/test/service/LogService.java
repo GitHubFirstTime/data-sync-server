@@ -25,7 +25,7 @@ public class LogService extends CrudService<LogDao, Log> {
 	/*
 	 * @Autowired private LogDao logDao;
 	 */
-	@DS("fmbdb")
+	@DS("cmdbdb")
 	public Page<Log> findPage(Page<Log> page, Log log) {
 
 		// 设置默认时间范围，默认当前月

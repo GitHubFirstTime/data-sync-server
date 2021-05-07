@@ -1,6 +1,7 @@
 package com.rlc.rlccmdbapi.modules.datasource.config;
 
 import com.alibaba.druid.pool.xa.DruidXADataSource;
+import com.mysql.cj.jdbc.MysqlXADataSource;
 import com.rlc.rlcbase.pageHelper.page.Page;
 import com.rlc.rlcbase.persistence.interceptor.PaginationInterceptor;
 import com.rlc.rlcbase.persistence.typeHandler.ConvertBlobTypeHandler;
@@ -23,41 +24,48 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 @Configuration
-@MapperScan(basePackages = {"com.rlc.rlccmdbapi.modules.biz.dao","com.rlc.rlccmdbapi.modules.test.dao"}, sqlSessionFactoryRef = "ryvDBSqlSessionFactory",annotationClass = com.rlc.rlcbase.persistence.annotation.MyBatisDao.class)
+@MapperScan(basePackages = {"com.rlc.rlccmdbapi.modules.biz.dao"}, sqlSessionFactoryRef = "ryvDBSqlSessionFactory",annotationClass = com.rlc.rlcbase.persistence.annotation.MyBatisDao.class)
 public class DataSourceConfig_RYVDB {
 
 //    @Primary // 表示这个数据源是默认数据源, 这个注解必须要加，因为不加的话spring将分不清楚那个为主数据源（默认数据源）
     @Bean("ryvDataSource")
 //    @ConfigurationProperties(prefix = "spring.datasource.cmdbdb") //读取application.yml中的配置参数映射成为一个对象
-    public DataSource getRyvDataSource(DBConfig_RYVDB dbConfigCmdb) throws SQLException {
+    public DataSource getRyvDataSource(DBConfig_RYVDB dbConfig_ryvdb) throws SQLException {
         DataSource d = DataSourceBuilder.create().build();
 //        return DataSourceBuilder.create().build();
         //Atomikos统一管理分布式事务
         AtomikosDataSourceBean xaDataSource = new AtomikosDataSourceBean();
 
 //        Properties p = new Properties();
-//        p.setProperty ( "user" , dbConfigCmdb.getUsername() );
-//        p.setProperty ( "password" , dbConfigCmdb.getPassword() );
-//        p.setProperty ( "URL" , dbConfigCmdb.getUrl() );
+//        p.setProperty ( "user" , dbConfig_ryvdb.getUsername() );
+//        p.setProperty ( "password" , dbConfig_ryvdb.getPassword() );
+//        p.setProperty ( "URL" , dbConfig_ryvdb.getUrl() );
 //        xaDataSource.setXaProperties ( p );
 
         //用druidXADataSource方式或者上面的Properties方式都可以
-        DruidXADataSource druidXADataSource = new DruidXADataSource();
-        druidXADataSource.setUrl(dbConfigCmdb.getUrl());
-        druidXADataSource.setUsername(dbConfigCmdb.getUsername());
-        druidXADataSource.setPassword(dbConfigCmdb.getPassword());
+     /*   DruidXADataSource druidXADataSource = new DruidXADataSource();
+        druidXADataSource.setUrl(dbConfig_ryvdb.getUrl());
+        druidXADataSource.setUsername(dbConfig_ryvdb.getUsername());
+        druidXADataSource.setPassword(dbConfig_ryvdb.getPassword());*/
 
+        MysqlXADataSource mysqlXaDataSource = new MysqlXADataSource();
+        mysqlXaDataSource.setUrl(dbConfig_ryvdb.getUrl());
+        mysqlXaDataSource.setPinGlobalTxToPhysicalConnection(true);
+        mysqlXaDataSource.setPassword(dbConfig_ryvdb.getPassword());
+        mysqlXaDataSource.setUser(dbConfig_ryvdb.getUsername());
+
+        xaDataSource.setXaDataSource(mysqlXaDataSource);
         xaDataSource.setUniqueResourceName("ryvDataSource");
-        xaDataSource.setXaDataSource(druidXADataSource);
-        xaDataSource.setXaDataSourceClassName("com.alibaba.druid.pool.xa.DruidXADataSource");
-        xaDataSource.setMaxLifetime(dbConfigCmdb.getMaxLifetime());
-        xaDataSource.setMinPoolSize(dbConfigCmdb.getMinPoolSize());
-        xaDataSource.setMaxPoolSize(dbConfigCmdb.getMaxPoolSize());
-        xaDataSource.setBorrowConnectionTimeout(dbConfigCmdb.getBorrowConnectionTimeout());
-        xaDataSource.setLoginTimeout(dbConfigCmdb.getLoginTimeout());
-        xaDataSource.setMaintenanceInterval(dbConfigCmdb.getMaintenanceInterval());
-        xaDataSource.setMaxIdleTime(dbConfigCmdb.getMaxIdleTime());
-//        xaDataSource.setTestQuery(dbConfigCmdb.getTestQuery());
+//        xaDataSource.setXaDataSource(druidXADataSource);
+//        xaDataSource.setXaDataSourceClassName("com.alibaba.druid.pool.xa.DruidXADataSource");
+        xaDataSource.setMaxLifetime(dbConfig_ryvdb.getMaxLifetime());
+        xaDataSource.setMinPoolSize(dbConfig_ryvdb.getMinPoolSize());
+        xaDataSource.setMaxPoolSize(dbConfig_ryvdb.getMaxPoolSize());
+        xaDataSource.setBorrowConnectionTimeout(dbConfig_ryvdb.getBorrowConnectionTimeout());
+        xaDataSource.setLoginTimeout(dbConfig_ryvdb.getLoginTimeout());
+        xaDataSource.setMaintenanceInterval(dbConfig_ryvdb.getMaintenanceInterval());
+        xaDataSource.setMaxIdleTime(dbConfig_ryvdb.getMaxIdleTime());
+//        xaDataSource.setTestQuery(dbConfig_ryvdb.getTestQuery());
         return xaDataSource;
     }
 
@@ -82,10 +90,10 @@ public class DataSourceConfig_RYVDB {
     /*
      * @methodDesc: 功能描述:(test2 事物管理)
      */
-    @Bean(name = "ryvTransactionManager")
-    public DataSourceTransactionManager ryvTransactionManager(@Qualifier("ryvDataSource") DataSource dataSource) {
-        return new DataSourceTransactionManager(dataSource);
-    }
+//    @Bean(name = "ryvTransactionManager")
+//    public DataSourceTransactionManager ryvTransactionManager(@Qualifier("ryvDataSource") DataSource dataSource) {
+//        return new DataSourceTransactionManager(dataSource);
+//    }
 //    @Primary
     @Bean("ryvSqlSessionTemplate")
     public SqlSessionTemplate ryvSqlSessionTemplate(@Qualifier("ryvDBSqlSessionFactory") SqlSessionFactory sqlSessionFactory){

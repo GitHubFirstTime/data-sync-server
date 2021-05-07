@@ -1,7 +1,10 @@
 package com.rlc.rlccmdbapi.modules.datasource.prop;
 
+import com.rlc.rlcbase.config.YmlPropertySourceFactory;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 
 /**
  * @author rlc_zyc
@@ -9,6 +12,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @description: TODO
  * @date 2021/4/23 21:42
  */
+//@PropertySource(value = "classpath:/application-${spring.profiles.active}.yml",encoding = "utf-8",factory = YmlPropertySourceFactory.class)
 @ConfigurationProperties(prefix = "spring.datasource.fmbdb")
 @Data
 public class DBConfig_FMB {

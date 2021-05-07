@@ -11,6 +11,7 @@ import com.rlc.rlccmdbapi.modules.datasource.prop.DBConfig_RYVDB;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -21,19 +22,20 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-@SpringBootApplication(exclude = {DruidDataSourceAutoConfigure.class, DataSourceTransactionManagerAutoConfiguration.class},
-scanBasePackages = {"com.rlc.rlcbase","com.rlc.rlccmdbapi"})
+@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class,DruidDataSourceAutoConfigure.class, DataSourceTransactionManagerAutoConfiguration.class},
+scanBasePackages = {"com.rlc.rlcbase.quartz","com.rlc.rlccmdbapi"}
+)
 //@MapperScan({"com.rlc.cmdbServer.modules.test.dao","com.rlc.cmdbServer.modules.cmdb.dao"})
 @EnableConfigurationProperties({DBConfig_CMDB.class, DBConfig_FMB.class, DBConfig_RYVDB.class})
 public class RlcCmdbApiApplication {
 
     public static void main(String[] args) {
-//        SpringApplication.run(RlcCmdbApiApplication.class, args);
-        int port = 0;
-        int defaultPort = 8099;
+        SpringApplication.run(RlcCmdbApiApplication.class, args);
+       /* int port = 0;
+        int defaultPort = 8090;
         Future<Integer> future = ThreadUtil.execAsync(() ->{
             int p = 0;
-            System.out.println("请于5秒钟内输入端口号, 推荐  8001 、 8002  或者  8003，超过5秒将默认使用 " + defaultPort);
+            System.out.println("请于5秒钟内输入端口号, 推荐  8090 、 8091  或者  8092，超过5秒将默认使用 " + defaultPort);
             Scanner scanner = new Scanner(System.in);
             while(true) {
                 String strPort = scanner.nextLine();
@@ -55,11 +57,12 @@ public class RlcCmdbApiApplication {
         catch (InterruptedException | ExecutionException | TimeoutException e){
             port = defaultPort;
         }
+
         if(!NetUtil.isUsableLocalPort(port)) {
             System.err.printf("端口%d被占用了，无法启动%n", port );
             System.exit(1);
         }
-        new SpringApplicationBuilder(RlcCmdbApiApplication.class).properties("server.port=" + port).run(args);
+        new SpringApplicationBuilder(RlcCmdbApiApplication.class).properties("server.port=" + port).run(args);*/
     }
 
 }
