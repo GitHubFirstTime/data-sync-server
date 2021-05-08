@@ -298,13 +298,29 @@ public class QuartzManager {
     }
 
     /**
+     * @description: 判断任务是否存在
+     * @param t class
+     * @author rlc_zyc
+     * @date 2021/5/8 15:46
+     * @version 1.0
+     * @return 存在返回true否正false
+     */
+    public boolean checkJob(Class t){
+        try {
+            JobKey jobKey = JobKey.jobKey(t.getSimpleName(), t.getSimpleName());
+            return scheduler.checkExists(jobKey);
+        } catch (SchedulerException e) {
+            return true;
+        }
+    }
+    /**
      * 根据定时任务名称来判断任务是否存在
      * @param jobName   定时任务名称
-     * @param jobGroup 任务组（没有分组传值null）
+     * @param jobGroupName 任务组（没有分组传值null）
      * @throws SchedulerException
      */
-    public Boolean checkExistsScheduleJob(String jobName,String jobGroup) throws Exception {
-        JobKey jobKey = JobKey.jobKey(jobName, StringUtils.isNotBlank(jobGroup) ?jobGroup:null);
+    public Boolean checkExistsScheduleJob(String jobName,String jobGroupName) throws Exception {
+        JobKey jobKey = JobKey.jobKey(jobName, StringUtils.isNotBlank(jobGroupName) ?jobGroupName:null);
         return scheduler.checkExists(jobKey);
     }
 

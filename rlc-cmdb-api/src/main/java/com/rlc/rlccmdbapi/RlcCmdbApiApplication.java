@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class,DruidDataSourceAutoConfigure.class, DataSourceTransactionManagerAutoConfiguration.class},
-scanBasePackages = {"com.rlc.rlcbase.quartz","com.rlc.rlccmdbapi"}
+scanBasePackages = {"com.rlc.rlcbase","com.rlc.rlccmdbapi"}
 )
 //@MapperScan({"com.rlc.cmdbServer.modules.test.dao","com.rlc.cmdbServer.modules.cmdb.dao"})
 @EnableConfigurationProperties({DBConfig_CMDB.class, DBConfig_FMB.class, DBConfig_RYVDB.class})

@@ -6,17 +6,12 @@
 
     <!--变量配置-->
     <Properties>
-        <!-- <property name="webApp.root" value="${web:attr.name}" /> -->
-        <property name="webApp.root" value="../data-sync-server-log" />
         <!-- 格式化输出：%date表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度 %msg：日志消息，%n是换行符-->
         <!-- %logger{36} 表示 Logger 名字最长36个字符 -->
         <property name="LOG_PATTERN" value="%date{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n" />
         <!-- 定义日志存储的路径 -->
-        <!-- 更换为你的日志路径 -->
-        <!-- <property name="FILE_PATH" value="${sys:catalina.home}/logs" /> -->
-        <property name="FILE_PATH" value="${webApp.root}" />
-        <!-- 更换为你的项目名 -->
-        <property name="FILE_NAME" value="DataSyncServer" />
+        <property name="FILE_PATH" value="../dataSyncServer_log" />
+        <property name="FILE_NAME" value="dataSyncServer" />
     </Properties>
 
     <appenders>
@@ -29,9 +24,9 @@
         </console>
 
         <!--文件会打印出所有信息，这个log每次运行程序会自动清空，由append属性决定，适合临时测试用-->
-       <!-- <File name="Filelog" fileName="${FILE_PATH}/test.log" append="false">
+        <File name="Filelog" fileName="${FILE_PATH}/test.log" append="false">
             <PatternLayout pattern="${LOG_PATTERN}"/>
-        </File>-->
+        </File>
 
         <!-- 这个会打印出所有的info及以下级别的信息，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档-->
         <RollingFile name="RollingFileInfo" fileName="${FILE_PATH}/info.log" filePattern="${FILE_PATH}/${FILE_NAME}-INFO-%d{yyyy-MM-dd}_%i.log.gz">
@@ -82,35 +77,18 @@
     <loggers>
 
         <!--过滤掉spring和mybatis的一些无用的DEBUG信息-->
-        <logger name="org.mybatis" level="debug" additivity="false">
+        <logger name="org.mybatis" level="info" additivity="false">
             <AppenderRef ref="Console"/>
-        </logger>
-        <logger name="com.ibatis.common.jdbc.SimpleDataSource" level="DEBUG" />
-        <logger name="com.ibatis.common.jdbc.ScriptRunner" level="DEBUG" />
-        <logger name="com.ibatis.sqlmap.engine.impl.SqlMapClientDelegate" level="DEBUG" />
-        <!-- sql loggers -->
-        <logger name="java.sql.Connection" level="DEBUG"  additivity="true"/>
-        <logger name="java.sql.Statement" level="DEBUG" additivity="true" />
-        <logger name="java.sql.PreparedStatement" level="=debug,stdout"  additivity="true"/>
-        <logger name="java.sql.ResultSet" level="DEBUG"  additivity="true"/>
-        <logger name="com.rlc.rlccmdbapi.modules.*.dao" level="DEBUG" additivity="true">
-            <Root level="debug">
-                <AppenderRef ref="console" />
-            </Root>
         </logger>
         <!--监控系统信息-->
         <!--若是additivity设为false，则 子Logger 只会在自己的appender里输出，而不会在 父Logger 的appender里输出。-->
         <Logger name="org.springframework" level="info" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
-        <!-- 将业务dao接口填写进去,并用控制台输出即可 -->
-        <logger name="com.rlc.cmdbServer.modules.*.dao" level="debug" additivity="false">
-            <appender-ref ref="Console"/>
-        </logger>
 
-        <root level="debug">
+        <root level="info">
             <appender-ref ref="Console"/>
-            <!--<appender-ref ref="Filelog"/>-->
+            <appender-ref ref="Filelog"/>
             <appender-ref ref="RollingFileInfo"/>
             <appender-ref ref="RollingFileWarn"/>
             <appender-ref ref="RollingFileError"/>

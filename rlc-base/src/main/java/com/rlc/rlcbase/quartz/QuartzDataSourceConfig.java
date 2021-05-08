@@ -13,7 +13,7 @@ import javax.sql.DataSource;
 /**
  * @author rlc_zyc
  * @version 1.0
- * @description: TODO
+ * @description: quartz 数据源配置
  * @date 2021/5/7 20:31
  */
 @Configuration

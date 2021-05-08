@@ -2,8 +2,10 @@ package com.rlc.rlcbase.config;
 
 import com.rlc.rlcbase.security.EncryptPropertyPlaceholderConfigurer;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.ClassPathResource;
 
@@ -20,11 +22,14 @@ import org.springframework.core.io.ClassPathResource;
  */
 @Configuration
 public class ResourcePlaceholderConfig {
+    String active;
     @Bean
     public PropertySourcesPlaceholderConfigurer propertyConfigurer() {
+        active = Global.getConfig("active.evn");
         PropertySourcesPlaceholderConfigurer config = new EncryptPropertyPlaceholderConfigurer();
         YamlPropertiesFactoryBean yaml = new YamlPropertiesFactoryBean();
-        yaml.setResources(new ClassPathResource("application.yml"));
+        yaml.setResources(new ClassPathResource("application-"+active+".yml"));
+        System.out.print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==="+active);
         config.setProperties(yaml.getObject());
         return config;
     }
