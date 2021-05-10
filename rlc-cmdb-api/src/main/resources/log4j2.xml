@@ -85,7 +85,10 @@
         <Logger name="org.springframework" level="info" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
-
+        !-- 配置 atomikos 只打印error级别的日志-->
+        <logger name="com.atomikos">
+            <level value="error" />
+        </logger>
         <root level="info">
             <appender-ref ref="Console"/>
             <appender-ref ref="Filelog"/>
@@ -94,5 +97,4 @@
             <appender-ref ref="RollingFileError"/>
         </root>
     </loggers>
-
 </configuration>

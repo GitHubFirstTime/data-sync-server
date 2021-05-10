@@ -1,7 +1,7 @@
 /**
  * Copyright &copy; 2015-2020 <a href="http://www.xx.org/">xx</a> All rights reserved.
  */
-package com.rlc.rlccmdbapi.modules.test.entity;
+package com.rlc.rlccmdbapi.modules.fmb.entity;
 
 import com.rlc.rlcbase.persistence.DataEntity;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;

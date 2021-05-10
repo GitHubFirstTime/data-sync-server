@@ -131,9 +131,9 @@ public class AESUtil {
     }
 
     public static void main(String[] args) {
-        String myKey = "zhonghuan2020@";
+        String myKey = "rlc_data_server_2021@";
 //        System.out.println(encode("ad300w",myKey));
-        System.out.println(encode("cmdb123456",myKey));
+        System.out.println(encode("123456",myKey));
 //        String[] keys = {
 //                "123456"
 //        };

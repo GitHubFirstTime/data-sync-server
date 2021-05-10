@@ -48,7 +48,7 @@ public class EncryptPropertyPlaceholderConfigurer extends PropertySourcesPlaceho
             if (entry.getValue().toString().startsWith(PREFIX_ENC)) {
                 String key = System.getProperty("enc.key");
                 if(StringUtils.isEmpty(key)){
-                    key = "zhonghuan2020@";
+                    key = "rlc_data_server_2021@";
                 }
 //                System.out.println("ssssss==========="+key);
                 String value = entry.getValue().toString().replace(PREFIX_ENC, StringUtils.EMPTY);

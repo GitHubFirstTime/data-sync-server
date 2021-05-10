@@ -1,14 +1,13 @@
 /**
  * Copyright &copy; 2015-2020 <a href="http://www.xx.org/">xx</a> All rights reserved.
  */
-package com.rlc.rlccmdbapi.modules.test.service;
+package com.rlc.rlccmdbapi.modules.cmdb.service;
 
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.rlc.rlcbase.pageHelper.page.Page;
 import com.rlc.rlcbase.persistence.service.CrudService;
 import com.rlc.rlcbase.utils.DateUtils;
-import com.rlc.rlccmdbapi.modules.test.dao.LogDao;
-import com.rlc.rlccmdbapi.modules.test.entity.Log;
+import com.rlc.rlccmdbapi.modules.cmdb.dao.LogDao;
+import com.rlc.rlccmdbapi.modules.cmdb.entity.Log;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +24,7 @@ public class LogService extends CrudService<LogDao, Log> {
 	/*
 	 * @Autowired private LogDao logDao;
 	 */
-	@DS("cmdbdb")
+//	@DS("cmdbdb")
 	public Page<Log> findPage(Page<Log> page, Log log) {
 
 		// 设置默认时间范围，默认当前月

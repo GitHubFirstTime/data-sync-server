@@ -1,4 +1,4 @@
-package com.rlc.rlccmdbapi.modules.biz.entity;
+package com.rlc.rlccmdbapi.modules.fmb.entity;
 
 import com.rlc.rlcbase.persistence.DataEntity;
 

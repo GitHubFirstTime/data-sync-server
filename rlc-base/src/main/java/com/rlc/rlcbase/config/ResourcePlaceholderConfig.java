@@ -1,6 +1,8 @@
 package com.rlc.rlcbase.config;
 
 import com.rlc.rlcbase.security.EncryptPropertyPlaceholderConfigurer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -22,6 +24,7 @@ import org.springframework.core.io.ClassPathResource;
  */
 @Configuration
 public class ResourcePlaceholderConfig {
+    Logger logger =  LogManager.getLogger(ResourcePlaceholderConfig.class);
     String active;
     @Bean
     public PropertySourcesPlaceholderConfigurer propertyConfigurer() {
@@ -29,7 +32,7 @@ public class ResourcePlaceholderConfig {
         PropertySourcesPlaceholderConfigurer config = new EncryptPropertyPlaceholderConfigurer();
         YamlPropertiesFactoryBean yaml = new YamlPropertiesFactoryBean();
         yaml.setResources(new ClassPathResource("application-"+active+".yml"));
-        System.out.print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==="+active);
+        logger.info("激活配置文件环境:{}",active);
         config.setProperties(yaml.getObject());
         return config;
     }

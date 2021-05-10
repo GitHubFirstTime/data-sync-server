@@ -30,8 +30,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 @Configuration
-@MapperScan(basePackages = {"com.rlc.rlccmdbapi.modules.test.dao"}, sqlSessionFactoryRef = "cmdbDBSqlSessionFactory",annotationClass = com.rlc.rlcbase.persistence.annotation.MyBatisDao.class)
-//@DependsOn("transactionManager")
+@MapperScan(basePackages = {"com.rlc.rlccmdbapi.modules.cmdb.dao"}, sqlSessionFactoryRef = "cmdbDBSqlSessionFactory")
 public class DataSourceConfig_cmdbDB {
 
     @Primary // 表示这个数据源是默认数据源, 这个注解必须要加，因为不加的话spring将分不清楚那个为主数据源（默认数据源）
@@ -50,19 +49,19 @@ public class DataSourceConfig_cmdbDB {
 //        xaDataSource.setXaProperties ( p );
 
         //用druidXADataSource方式或者上面的Properties方式都可以
-//        DruidXADataSource druidXADataSource = new DruidXADataSource();
-//        druidXADataSource.setUrl(dbConfigCmdb.getUrl());
-//        druidXADataSource.setUsername(dbConfigCmdb.getUsername());
-//        druidXADataSource.setPassword(dbConfigCmdb.getPassword());
+        DruidXADataSource druidXADataSource = new DruidXADataSource();
+        druidXADataSource.setUrl(dbConfigCmdb.getUrl());
+        druidXADataSource.setUsername(dbConfigCmdb.getUsername());
+        druidXADataSource.setPassword(dbConfigCmdb.getPassword());
+        druidXADataSource.setDriverClassName(dbConfigCmdb.getDriverClassName());
 
-
-        MysqlXADataSource mysqlXaDataSource = new MysqlXADataSource();
+       /* MysqlXADataSource mysqlXaDataSource = new MysqlXADataSource();
         mysqlXaDataSource.setUrl(dbConfigCmdb.getUrl());
-        mysqlXaDataSource.setPinGlobalTxToPhysicalConnection(true);
         mysqlXaDataSource.setPassword(dbConfigCmdb.getPassword());
         mysqlXaDataSource.setUser(dbConfigCmdb.getUsername());
+        mysqlXaDataSource.setPinGlobalTxToPhysicalConnection(true);*/
 
-        xaDataSource.setXaDataSource(mysqlXaDataSource);
+        xaDataSource.setXaDataSource(druidXADataSource);
         xaDataSource.setUniqueResourceName("cmdbDataSource");
         xaDataSource.setMinPoolSize(dbConfigCmdb.getMinPoolSize());
         xaDataSource.setMaxPoolSize(dbConfigCmdb.getMaxPoolSize());
@@ -86,11 +85,11 @@ public class DataSourceConfig_cmdbDB {
         paginationInterceptor.setProperties(properties);
         bean.setPlugins(paginationInterceptor);
         bean.setTypeAliases(Page.class);
-        bean.setTypeAliasesPackage("com.rlc.rlccmdbapi.modules.test.entity");
+        bean.setTypeAliasesPackage("com.rlc.rlccmdbapi.modules.cmdb.entity");
         bean.setTypeHandlers(new ConvertBlobTypeHandler());
         bean.setDataSource(dataSource);
         // mapper的xml形式文件位置必须要配置，不然将报错：no statement （这种错误也可能是mapper的xml中，namespace与项目的路径不一致导致）
-        bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath*:mappings/modules/cmdb/*.xml"));
+        bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mappings/modules/cmdb/*.xml"));
         return bean.getObject();
     }
     /*

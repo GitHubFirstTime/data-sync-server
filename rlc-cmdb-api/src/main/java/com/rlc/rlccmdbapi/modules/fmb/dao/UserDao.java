@@ -1,4 +1,4 @@
-package com.rlc.rlccmdbapi.modules.biz.dao;
+package com.rlc.rlccmdbapi.modules.fmb.dao;
 
 import com.rlc.rlcbase.persistence.CrudDao;
 import com.rlc.rlcbase.persistence.annotation.MyBatisDao;

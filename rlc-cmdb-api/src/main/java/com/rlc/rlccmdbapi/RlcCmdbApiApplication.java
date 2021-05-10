@@ -7,7 +7,6 @@ import cn.hutool.core.util.NumberUtil;
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
 import com.rlc.rlccmdbapi.modules.datasource.prop.DBConfig_CMDB;
 import com.rlc.rlccmdbapi.modules.datasource.prop.DBConfig_FMB;
-import com.rlc.rlccmdbapi.modules.datasource.prop.DBConfig_RYVDB;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,6 +14,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
@@ -26,7 +26,8 @@ import java.util.concurrent.TimeoutException;
 scanBasePackages = {"com.rlc.rlcbase","com.rlc.rlccmdbapi"}
 )
 //@MapperScan({"com.rlc.cmdbServer.modules.test.dao","com.rlc.cmdbServer.modules.cmdb.dao"})
-@EnableConfigurationProperties({DBConfig_CMDB.class, DBConfig_FMB.class, DBConfig_RYVDB.class})
+@EnableConfigurationProperties({DBConfig_CMDB.class, DBConfig_FMB.class})
+@EnableTransactionManagement(proxyTargetClass=true)//开启事务 用CGLib代理方式
 public class RlcCmdbApiApplication {
 
     public static void main(String[] args) {
