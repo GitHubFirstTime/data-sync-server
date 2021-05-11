@@ -11,7 +11,7 @@ mybatis:
   #  config-location: classpath:/mybatis/mybatis-config.xml
   mapper-locations: classpath:/mappings/modules/*/*.xml
   # 注意：对应实体类的路径
-  type-aliases-package: com.rlc.rlccmdbapi.modules.fmb.entity,com.rlc.rlccmdbapi.modules.cmdb.entity
+  type-aliases-package: com.rlc.rlcfmbapi.modules.fmb.entity,com.rlc.rlcfmbapi.modules.cmdb.entity
     # 支持通过 Mapper 接口参数来传递分页参数
   configuration:
       log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

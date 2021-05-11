@@ -1,28 +1,22 @@
-package com.rlc.rlccmdbapi.modules.datasource.config;
+package com.rlc.rlcfmbapi.datasource.config;
 
-import com.alibaba.druid.pool.xa.DruidXADataSource;
 import com.atomikos.icatch.jta.UserTransactionImp;
 import com.atomikos.icatch.jta.UserTransactionManager;
 import com.mysql.cj.jdbc.MysqlXADataSource;
 import com.rlc.rlcbase.pageHelper.page.Page;
 import com.rlc.rlcbase.persistence.interceptor.PaginationInterceptor;
 import com.rlc.rlcbase.persistence.typeHandler.ConvertBlobTypeHandler;
-import com.rlc.rlccmdbapi.modules.datasource.prop.DBConfig_CMDB;
+import com.rlc.rlcfmbapi.datasource.prop.DBConfig_CMDB;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.jta.atomikos.AtomikosDataSourceBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.jta.JtaTransactionManager;
 
 import javax.sql.DataSource;
@@ -42,7 +36,19 @@ public class DataSourceConfig_cmdbDB {
         //Atomikos统一管理分布式事务
         AtomikosDataSourceBean xaDataSource = new AtomikosDataSourceBean();
 
-        //mysql连接基础信息
+//        Properties p = new Properties();
+//        p.setProperty ( "user" , dbConfigCmdb.getUsername() );
+//        p.setProperty ( "password" , dbConfigCmdb.getPassword() );
+//        p.setProperty ( "URL" , dbConfigCmdb.getUrl() );
+//        xaDataSource.setXaProperties ( p );
+
+        //用druidXADataSource方式或者上面的Properties方式都可以
+        /*DruidXADataSource druidXADataSource = new DruidXADataSource();
+        druidXADataSource.setUrl(dbConfigCmdb.getUrl());
+        druidXADataSource.setUsername(dbConfigCmdb.getUsername());
+        druidXADataSource.setPassword(dbConfigCmdb.getPassword());
+        druidXADataSource.setDriverClassName(dbConfigCmdb.getDriverClassName());*/
+
         MysqlXADataSource mysqlXaDataSource = new MysqlXADataSource();
         mysqlXaDataSource.setUrl(dbConfigCmdb.getUrl());
         mysqlXaDataSource.setPassword(dbConfigCmdb.getPassword());
@@ -50,7 +56,6 @@ public class DataSourceConfig_cmdbDB {
         mysqlXaDataSource.setPinGlobalTxToPhysicalConnection(true);
 
         xaDataSource.setXaDataSource(mysqlXaDataSource);
-        //连接池配置信息
         xaDataSource.setUniqueResourceName("cmdbDataSource");
         xaDataSource.setMinPoolSize(dbConfigCmdb.getMinPoolSize());
         xaDataSource.setMaxPoolSize(dbConfigCmdb.getMaxPoolSize());

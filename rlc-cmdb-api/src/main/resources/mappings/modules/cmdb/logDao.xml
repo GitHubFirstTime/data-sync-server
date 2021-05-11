@@ -24,21 +24,44 @@
         a.id,
         a.title
         FROM sys_log a
-        WHERE a.create_date BETWEEN #{beginDate} AND #{endDate}
-        <if test="title != null and title != ''">
-            AND a.title LIKE
-            <if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
-            <if test="dbName == 'mysql'">CONCAT('%', #{title}, '%')</if>
-        </if>
+        WHERE
+        1=1
+            <if test="title != null and title != ''">
+                AND a.title LIKE
+                <if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+                <if test="dbName == 'mysql'">CONCAT('%', #{title}, '%')</if>
+            </if>
 
-        <if test="requestUri != null and requestUri != ''">
-            AND a.request_uri LIKE
-            <if test="dbName == 'oracle'">'%'||#{requestUri}||'%'</if>
-            <if test="dbName == 'mysql'">CONCAT('%', #{requestUri}, '%')</if>
-        </if>
-        <if test="exception != null and exception != ''">
-            AND a.type = #{TYPE_EXCEPTION}
-        </if>
+            <if test="requestUri != null and requestUri != ''">
+                AND a.request_uri LIKE
+                <if test="dbName == 'oracle'">'%'||#{requestUri}||'%'</if>
+                <if test="dbName == 'mysql'">CONCAT('%', #{requestUri}, '%')</if>
+            </if>
+            <if test="exception != null and exception != ''">
+                AND a.type = #{TYPE_EXCEPTION}
+            </if>
         ORDER BY a.create_date DESC
     </select>
+    <insert id="save" parameterType="Log" useGeneratedKeys="true" keyProperty="id">
+		insert into sys_log
+		(
+			`username`,
+			`operation`,
+			`method`,
+			`params`,
+			`time`,
+			`ip`,
+			`create_date`
+		)
+		values
+		(
+			#{username},
+			#{operation},
+			#{method},
+			#{params},
+			#{time},
+			#{ip},
+			#{createDate}
+		)
+	</insert>
 </mapper>

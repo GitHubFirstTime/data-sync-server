@@ -1,10 +1,7 @@
-package com.rlc.rlccmdbapi.modules.datasource.prop;
+package com.rlc.rlcfmbapi.datasource.prop;
 
-import com.rlc.rlcbase.config.YmlPropertySourceFactory;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Component;
 
 /**
  * @author rlc_zyc

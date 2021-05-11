@@ -35,7 +35,12 @@ public class FmbLogService extends CrudService<FmbLogDao, Log> {
 			log.setEndDate(DateUtils.addMonths(log.getBeginDate(), 1));
 		}
 
-		return super.findPage(page, log);
+		try {
+			return super.findPage(page, log);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 
 	}
 	

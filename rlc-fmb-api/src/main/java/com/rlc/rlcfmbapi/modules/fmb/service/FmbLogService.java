@@ -1,13 +1,13 @@
 /**
  * Copyright &copy; 2015-2020 <a href="http://www.xx.org/">xx</a> All rights reserved.
  */
-package com.rlc.rlccmdbapi.modules.cmdb.service;
+package com.rlc.rlcfmbapi.modules.fmb.service;
 
 import com.rlc.rlcbase.pageHelper.page.Page;
 import com.rlc.rlcbase.persistence.service.CrudService;
 import com.rlc.rlcbase.utils.DateUtils;
-import com.rlc.rlccmdbapi.modules.cmdb.dao.LogDao;
-import com.rlc.rlccmdbapi.modules.cmdb.entity.Log;
+import com.rlc.rlcfmbapi.modules.fmb.dao.FmbLogDao;
+import com.rlc.rlcfmbapi.modules.fmb.entity.Log;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional(readOnly = true)
-public class LogService extends CrudService<LogDao, Log> {
+public class FmbLogService extends CrudService<FmbLogDao, Log> {
 
 	/*
 	 * @Autowired private LogDao logDao;
