@@ -1,7 +1,6 @@
-package com.rlc.rlccmdbapi.modules.func.quartz;
+package com.rlc.rlccmdbapi.func.quartz;
 
 import com.alibaba.druid.pool.DruidDataSource;
-import lombok.Data;
 import org.quartz.SchedulerException;
 import org.quartz.utils.ConnectionProvider;
 import org.springframework.beans.BeansException;

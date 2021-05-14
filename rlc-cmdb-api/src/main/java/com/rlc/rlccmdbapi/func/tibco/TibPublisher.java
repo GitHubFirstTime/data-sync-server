@@ -1,6 +1,6 @@
-package com.rlc.rlccmdbapi.modules.func.tibco;
+package com.rlc.rlccmdbapi.func.tibco;
 
-import com.rlc.rlccmdbapi.modules.func.tibco.config.Constants;
+import com.rlc.rlccmdbapi.func.tibco.config.Constants;
 import com.tibco.tibrv.Tibrv;
 import com.tibco.tibrv.TibrvException;
 import com.tibco.tibrv.TibrvMsg;

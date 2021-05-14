@@ -124,7 +124,7 @@ spring:
       #dataSource名称
       org.quartz.jobStore.dataSource: quartzDataSource,
       #dataSource具体参数配置
-      org.quartz.dataSource.quartzDataSource.connectionProvider.class: com.rlc.rlccmdbapi.modules.func.quartz.DruidConnectionProvider,
+      org.quartz.dataSource.quartzDataSource.connectionProvider.class: com.rlc.rlccmdbapi.func.quartz.DruidConnectionProvider,
       org.quartz.dataSource.quartzDataSource.driver: com.mysql.cj.jdbc.Driver,
       org.quartz.dataSource.quartzDataSource.URL: 'jdbc:mysql://192.168.3.82:3306/demo_two?useSSL=false&useUnicode=true&characterEncoding=utf8&serverTimezone=UTC',
       org.quartz.dataSource.quartzDataSource.user: root,
@@ -137,7 +137,7 @@ spring:
 #          datasource:
 #            quartzDataSource:
 #              connectionProvider:
-#                class: com.rlc.rlccmdbapi.modules.func.quartz.DruidConnectionProvider
+#                class: com.rlc.rlccmdbapi.func.quartz.DruidConnectionProvider
 #              driver: com.mysql.cj.jdbc.Driver
 #              URL: jdbc:mysql://localhost:3306/demo_two?useSSL=false&useUnicode=true&characterEncoding=utf8&serverTimezone=UTC&allowPublicKeyRetrieval=true
 #              user: root

@@ -1,4 +1,4 @@
-package com.rlc.rlccmdbapi.modules.func.quartzJob;
+package com.rlc.rlccmdbapi.func.quartzJob;
 
 import com.rlc.rlcbase.quartz.QuartzManager;
 import com.rlc.rlcbase.result.ResultData;

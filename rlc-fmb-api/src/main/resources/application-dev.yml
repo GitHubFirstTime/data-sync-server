@@ -124,7 +124,7 @@ spring:
 #      #dataSource名称
 #      org.quartz.jobStore.dataSource: qzDS,
 #      #dataSource具体参数配置
-#      org.quartz.dataSource.qzDS.connectionProvider.class: com.rlc.rlccmdbapi.modules.func.quartz.DruidConnectionProvider,
+#      org.quartz.dataSource.qzDS.connectionProvider.class: com.rlc.rlccmdbapi.func.quartz.DruidConnectionProvider,
 #      org.quartz.dataSource.qzDS.driver: com.mysql.jdbc.Driver,
 #      org.quartz.dataSource.qzDS.URL: 'jdbc:mysql://192.168.3.82:3306/demo_two?useSSL=false&useUnicode=true&characterEncoding=utf8',
 #      org.quartz.dataSource.qzDS.user: root,

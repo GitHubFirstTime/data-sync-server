@@ -1,4 +1,4 @@
-package com.rlc.rlccmdbapi.modules.func.swagger;
+package com.rlc.rlccmdbapi.func.swagger;
 
 import io.github.swagger2markup.GroupBy;
 import io.github.swagger2markup.Language;

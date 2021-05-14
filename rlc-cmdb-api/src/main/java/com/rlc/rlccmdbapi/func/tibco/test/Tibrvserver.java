@@ -1,4 +1,4 @@
-package com.rlc.rlccmdbapi.modules.func.tibco.test;
+package com.rlc.rlccmdbapi.func.tibco.test;
 
 import com.tibco.tibrv.*;
 

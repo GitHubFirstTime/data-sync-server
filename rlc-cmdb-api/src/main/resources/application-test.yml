@@ -1,14 +1,13 @@
-################此配置文件勿用
 spring:
   datasource:
     cmdbdb:
       driver-class-name: com.mysql.cj.jdbc.Driver
       type: com.alibaba.druid.pool.DruidDataSource
-      #      jdbc-url: jdbc:mysql://192.168.2.206:3306/cmdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
-      url: jdbc:mysql://192.168.2.206:3306/cmdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false
+      #      url: jdbc:mysql://192.168.2.102:3308/zbswitchover?useUnicode=true&serverTimezone=GMT&characterEncoding=utf8&useSSL=false
+      url: jdbc:mysql://192.168.2.206:3308/cmdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
       #    url: jdbc:oracle:thin:@192.168.2.250:1521:db11g
       username: root
-      password: 123456
+      password: 123456  # enc:MuQNF4nF/yO5xoK08aCLTg==
       #      jdbc-url: jdbc:mysql://localhost:3306/cmdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
       #      username: root
       #      password: enc:Hqh8cdvsynsEhps8+TWiww==
@@ -18,49 +17,6 @@ spring:
       minIdle: 3
       maxActive: 20
       #      maxPoolSize: 100
-      # 配置获取连接等待超时的时间
-      maxWait: 60000
-      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
-      timeBetweenEvictionRunsMillis: 60000
-      # 配置一个连接在池中最小生存的时间，单位是毫秒
-      minEvictableIdleTimeMillis: 30000
-      #validationQuery: select 'x'
-      testWhileIdle: false
-      testOnBorrow: false
-      testOnReturn: false
-      # 打开PSCache，并且指定每个连接上PSCache的大小
-      poolPreparedStatements: true
-      maxPoolPreparedStatementPerConnectionSize: 20
-      # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
-      filters: stat,wall,slf4j
-      # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
-      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
-      # 合并多个DruidDataSource的监控数据
-      useGlobalDataSourceStat: true
-      min-pool-size: 10
-      max-pool-size: 100
-      login-timeout: 30
-      max-lifetime: 20000
-      max-idle-time: 60
-      borrow-connection-timeout: 30
-      maintenance-interval: 60
-    ryvdb:
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      type: com.alibaba.druid.pool.DruidDataSource
-      #      jdbc-url: jdbc:mysql://192.168.2.206:3306/cmdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
-      url: jdbc:mysql://192.168.3.82:3306/demo_two?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false
-      #    url: jdbc:oracle:thin:@192.168.2.250:1521:db11g
-      username: root
-      password: cmdb123456
-      #      jdbc-url: jdbc:mysql://localhost:3306/cmdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
-      #      username: root
-      #      password: enc:Hqh8cdvsynsEhps8+TWiww==
-      # 下面为连接池的补充设置，应用到上面所有数据源中
-      # 初始化大小，最小，最大
-      initialSize: 1
-      minIdle: 3
-      maxActive: 20
-      #      maxPoolSize: 10
       # 配置获取连接等待超时的时间
       maxWait: 60000
       # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
@@ -148,61 +104,73 @@ spring:
     jdbc:
       initialize-schema: never # 配置是否每次重启项目都自动生成Quartz表结构,在此使用always生成一次后就可以改为never配置
     #quartz相关属性配置
-    #    properties: {
-    #      #定时任务的实例编号,指定为Auto就可以了，我们把生成编号的任务交给quartz。
-    #      org.quartz.scheduler.instanceId: AUTO,
-    #      org.quartz.threadPool.class: org.springframework.scheduling.quartz.SimpleThreadPoolTaskExecutor,
-    #
-    #      org.quartz.threadPool.threadCount: 25,
-    #      org.quartz.threadPool.threadPriority: 5,
-    #      org.quartz.jobStore.misfireThreshold: 60000,
-    #      org.quartz.jobStore.class: org.quartz.impl.jdbcjobstore.JobStoreTX,
-    #      org.quartz.jobStore.driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate,
-    #      org.quartz.jobStore.tablePrefix: QRTZ_,
-    #      #开启定时任务的分布式配置，当我们配置为true时quartz框架就会调用ClusterManager来初始化分布式节点。
-    #      org.quartz.jobStore.isClustered: true,
-    #      #分布式节点的检查时间间隔，单位：毫秒。
-    #      org.quartz.jobStore.clusterCheckinInterval: 20000,
-    #      org.quartz.jobStore.maxMisfiresToHandleAtATime: 1,
-    #      org.quartz.jobStore.txIsolationLevelSerializable: false,
-    #      #dataSource名称
-    #      org.quartz.jobStore.dataSource: qzDS,
-    #      #dataSource具体参数配置
-    #      org.quartz.dataSource.qzDS.connectionProvider.class: com.rlc.rlccmdbapi.modules.func.quartz.DruidConnectionProvider,
-    #      org.quartz.dataSource.qzDS.driver: com.mysql.jdbc.Driver,
-    #      org.quartz.dataSource.qzDS.URL: 'jdbc:mysql://192.168.3.82:3306/demo_two?useSSL=false&useUnicode=true&characterEncoding=utf8',
-    #      org.quartz.dataSource.qzDS.user: root,
-    #      org.quartz.dataSource.qzDS.password: cmdb123456,
-    #      org.quartz.dataSource.qzDS.maxConnections: 5
-    #    }
-    properties:
-      org:
-        quartz:
-          scheduler:
-            instanceName: clusteredScheduler #调度器的实例名
-            instanceId: AUTO #调度器编号自动生成
-            makeSchedulerThreadDaemon: true # 指定scheduler的主线程是否为后台线程，【默认false】【非必须】
-          jobStore:
-            class: org.quartz.impl.jdbcjobstore.JobStoreTX #数据库方式
-            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate #持久化方式配置数据驱动，MySQL数据库
-            tablePrefix: QRTZ_ #数据库表名前缀
-            isClustered: true #开启分布式部署
-            clusterCheckinInterval: 10000 #分布式节点有效性检查时间间隔,单位:秒
-            useProperties: false
-            dataSource: quartzDataSource
+    properties: {
+      #定时任务的实例编号,指定为Auto就可以了，我们把生成编号的任务交给quartz。
+      org.quartz.scheduler.instanceId: AUTO,
+      org.quartz.threadPool.class: org.springframework.scheduling.quartz.SimpleThreadPoolTaskExecutor,
 
-          threadPool:
-            class: org.quartz.simpl.SimpleThreadPool #自带的线程池实现类
-            threadCount: 10 #开启10个线程
-            threadPriority: 5 #工作者线程的优先级
-            threadsInheritContextClassLoaderOfInitializingThread: true
-            makeThreadsDaemons: true # 指定在线程池里面创建的线程是否是守护线程
-          datasource: #配置数据库源（org.quartz.dataSource.qzDS.maxConnections: c3p0配置的是有s的，druid数据源没有s）
-            quartzDataSource:
-              #              connectionProvider:
-              #                class: com.rlc.rlccmdbapi.modules.func.quartz.DruidConnectionProvider
-              driver: com.mysql.jdbc.Driver
-              URL: jdbc:mysql://192.168.3.82:3306/demo_two?useSSL=false&useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true
-              user: root
-              password: cmdb123456
-              maxConnection: 10
+      org.quartz.threadPool.threadCount: 25,
+      org.quartz.threadPool.threadPriority: 5,
+      org.quartz.jobStore.misfireThreshold: 60000,
+      org.quartz.jobStore.class: org.quartz.impl.jdbcjobstore.JobStoreTX,
+      org.quartz.jobStore.driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate,
+      org.quartz.jobStore.tablePrefix: QRTZ_,
+      #开启定时任务的分布式配置，当我们配置为true时quartz框架就会调用ClusterManager来初始化分布式节点。
+      org.quartz.jobStore.isClustered: true,
+      #分布式节点的检查时间间隔，单位：毫秒。
+      org.quartz.jobStore.clusterCheckinInterval: 20000,
+      org.quartz.jobStore.maxMisfiresToHandleAtATime: 1,
+      org.quartz.jobStore.txIsolationLevelSerializable: false,
+      #dataSource名称
+      org.quartz.jobStore.dataSource: quartzDataSource,
+      #dataSource具体参数配置
+      org.quartz.dataSource.quartzDataSource.connectionProvider.class: com.rlc.rlccmdbapi.func.quartz.DruidConnectionProvider,
+      org.quartz.dataSource.quartzDataSource.driver: com.mysql.cj.jdbc.Driver,
+      org.quartz.dataSource.quartzDataSource.URL: 'jdbc:mysql://192.168.3.82:3306/demo_two?useSSL=false&useUnicode=true&characterEncoding=utf8&serverTimezone=UTC',
+      org.quartz.dataSource.quartzDataSource.user: root,
+      org.quartz.dataSource.quartzDataSource.password: cmdb123456,
+      org.quartz.dataSource.quartzDataSource.maxConnections: 5
+    }
+#    properties:
+#      org:
+#        quartz:
+#          datasource:
+#            quartzDataSource:
+#              connectionProvider:
+#                class: com.rlc.rlccmdbapi.func.quartz.DruidConnectionProvider
+#              driver: com.mysql.cj.jdbc.Driver
+#              URL: jdbc:mysql://localhost:3306/demo_two?useSSL=false&useUnicode=true&characterEncoding=utf8&serverTimezone=UTC&allowPublicKeyRetrieval=true
+#              user: root
+#              password: cmdb123456
+#              maxConnections: 5
+#          scheduler:
+#            instanceName: clusteredScheduler #调度器的实例名
+#            instanceId: AUTO #调度器编号自动生成
+#            makeSchedulerThreadDaemon: true # 指定scheduler的主线程是否为后台线程，【默认false】【非必须】
+#          jobStore:
+#            dataSource: quartzDataSource
+#            class: org.quartz.impl.jdbcjobstore.JobStoreTX #数据库方式
+#            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate #持久化方式配置数据驱动，MySQL数据库
+#            tablePrefix: QRTZ_ #数据库表名前缀
+#            isClustered: true #开启分布式部署
+#            clusterCheckinInterval: 10000 #分布式节点有效性检查时间间隔,单位:秒
+#            useProperties: false
+#
+#          threadPool:
+#            class: org.quartz.simpl.SimpleThreadPool #自带的线程池实现类
+#            threadCount: 10 #开启10个线程
+#            threadPriority: 5 #工作者线程的优先级
+#            threadsInheritContextClassLoaderOfInitializingThread: true
+#            makeThreadsDaemons: true # 指定在线程池里面创建的线程是否是守护线程
+
+
+#server:
+#  port: 8091
+
+app:
+  project-name: cmdv-server
+  version: 0.0.1
+# Swagger配置
+swagger:
+  # 是否开启swagger
+  enabled: true

@@ -1,4 +1,4 @@
-package com.rlc.rlccmdbapi.modules.func.tibco.config;
+package com.rlc.rlccmdbapi.func.tibco.config;
 
 public class Constants {
     public static String TIBCO_SERVICE = "7777";

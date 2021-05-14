@@ -1,4 +1,4 @@
-package com.rlc.rlccmdbapi.modules.func.quartzJob;
+package com.rlc.rlccmdbapi.func.quartzJob;
 
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobExecutionContext;

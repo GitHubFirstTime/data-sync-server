@@ -1,6 +1,6 @@
-package com.rlc.rlccmdbapi.modules.func.tibco;
+package com.rlc.rlccmdbapi.func.tibco;
 
-import com.rlc.rlccmdbapi.modules.func.tibco.config.Constants;
+import com.rlc.rlccmdbapi.func.tibco.config.Constants;
 import com.tibco.tibrv.*;
 
 public class TibSubscriber implements TibrvMsgCallback {

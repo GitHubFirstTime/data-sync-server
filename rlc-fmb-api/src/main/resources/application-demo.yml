@@ -167,7 +167,7 @@ spring:
     #      #dataSource名称
     #      org.quartz.jobStore.dataSource: qzDS,
     #      #dataSource具体参数配置
-    #      org.quartz.dataSource.qzDS.connectionProvider.class: com.rlc.rlccmdbapi.modules.func.quartz.DruidConnectionProvider,
+    #      org.quartz.dataSource.qzDS.connectionProvider.class: com.rlc.rlccmdbapi.func.quartz.DruidConnectionProvider,
     #      org.quartz.dataSource.qzDS.driver: com.mysql.jdbc.Driver,
     #      org.quartz.dataSource.qzDS.URL: 'jdbc:mysql://192.168.3.82:3306/demo_two?useSSL=false&useUnicode=true&characterEncoding=utf8',
     #      org.quartz.dataSource.qzDS.user: root,
@@ -199,7 +199,7 @@ spring:
           datasource: #配置数据库源（org.quartz.dataSource.qzDS.maxConnections: c3p0配置的是有s的，druid数据源没有s）
             quartzDataSource:
               #              connectionProvider:
-              #                class: com.rlc.rlccmdbapi.modules.func.quartz.DruidConnectionProvider
+              #                class: com.rlc.rlccmdbapi.func.quartz.DruidConnectionProvider
               driver: com.mysql.jdbc.Driver
               URL: jdbc:mysql://192.168.3.82:3306/demo_two?useSSL=false&useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true
               user: root

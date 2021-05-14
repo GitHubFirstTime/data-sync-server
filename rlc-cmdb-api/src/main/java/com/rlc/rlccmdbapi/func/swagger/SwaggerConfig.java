@@ -1,4 +1,4 @@
-package com.rlc.rlccmdbapi.modules.func.swagger;
+package com.rlc.rlccmdbapi.func.swagger;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
