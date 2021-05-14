@@ -24,8 +24,8 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
         this.dbType = dbType;
     }
 
-    public DynamicDataSource() {
-    }
+//    public DynamicDataSource() {
+//    }
     /**
      * 动态更新自定义数据源
      * @param defaultTargetDataSource
@@ -45,10 +45,10 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
      * 动态更新自定义数据源
      * @param customDataSources
      */
-    public void DynamicDataSource(Map<String,DataSource> customDataSources){
-        Map<Object,Object> customDS=new HashMap<Object, Object>();
-        customDS.putAll(customDataSources);
-        super.setTargetDataSources(customDS);
-        super.afterPropertiesSet();
-    }
+//    public void DynamicDataSource(Map<String,DataSource> customDataSources){
+//        Map<Object,Object> customDS=new HashMap<Object, Object>();
+//        customDS.putAll(customDataSources);
+//        super.setTargetDataSources(customDS);
+//        super.afterPropertiesSet();
+//    }
 }

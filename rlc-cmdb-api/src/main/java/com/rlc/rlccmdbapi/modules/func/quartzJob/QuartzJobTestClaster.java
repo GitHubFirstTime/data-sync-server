@@ -11,7 +11,7 @@ import java.util.Date;
 public class QuartzJobTestClaster extends QuartzJobBean {
     @Override
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-        String taskName = jobExecutionContext.getJobDetail().getJobDataMap().getString("name");
+        String taskName = jobExecutionContext.getJobDetail().getJobDataMap().getString("jobName");
 
         log.info("---> Quartz job {}, {} <----", new Date(), taskName+"2");
     }

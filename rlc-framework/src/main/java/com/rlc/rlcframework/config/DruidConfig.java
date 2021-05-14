@@ -171,7 +171,6 @@ public class DruidConfig {
         Map<Object, Object> targetDataSources = new HashMap<>();
         targetDataSources.put("cmdbDataSource", cmdbDataSource);
         targetDataSources.put("fmbDataSource", fmbDataSource);
-//        targetDataSources.put("quartzDataSource", quartzDataSource);
         //设置默认数据源
         multipleDataSource.setDefaultTargetDataSource(cmdbDataSource);
         //添加数据源

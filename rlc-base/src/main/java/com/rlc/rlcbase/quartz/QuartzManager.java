@@ -120,7 +120,41 @@ public class QuartzManager {
             e.printStackTrace();
         }
     }
+    /**
+     * 增加一个 带参 job
+     * @param jobClass 任务实现类
+     * @param jobName 任务名称
+     * @param jobGroupName 任务组名
+     * @param jobTime 时间表达式 （如：0/5 * * * * ? ）
+     */
+    public void addJob(Class<? extends Job> jobClass, String jobName,
+                       String jobGroupName, String jobTime,JobDataMap paramsMap) {
+        try {
 
+            // 创建jobDetail实例，绑定Job实现类
+            // 指明job的名称，所在组的名称，以及绑定job类
+            JobDetail jobDetail = JobBuilder.newJob(jobClass)
+                    .withIdentity(jobName, jobGroupName)// 任务名称和组构成任务key
+                    .build();
+            // 定义调度触发规则
+            // 使用cornTrigger规则
+            Trigger trigger = TriggerBuilder
+                    .newTrigger()
+                    .withIdentity(jobName, jobGroupName)
+                    // 触发器key
+                    .startAt(DateBuilder.futureDate(1, DateBuilder.IntervalUnit.SECOND))
+                    .withSchedule(CronScheduleBuilder.cronSchedule(jobTime))
+                    .startNow().build();
+            // 把作业和触发器注册到任务调度中
+            scheduler.scheduleJob(jobDetail, trigger);
+            // 启动
+            if (!scheduler.isShutdown()) {
+                scheduler.start();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     /**
      * 修改 一个job的 时间表达式
      *

@@ -18,7 +18,7 @@ import java.nio.file.Paths;
  * @date 2021/5/14 19:33
  */
 public class SwaggerUtils {
-    private static final String url = "http://127.0.0.1:8080/v2/api-docs";
+    private static final String url = "http://127.0.0.1:8091/v2/api-docs";
     /**
      * 生成AsciiDocs格式文档
      * @throws MalformedURLException

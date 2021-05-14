@@ -164,8 +164,8 @@ spring:
 #            makeThreadsDaemons: true # 指定在线程池里面创建的线程是否是守护线程
 
 
-server:
-  port: 8091
+#server:
+#  port: 8091
 
 app:
   project-name: cmdv-server

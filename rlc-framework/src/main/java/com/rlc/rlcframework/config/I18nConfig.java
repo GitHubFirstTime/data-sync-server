@@ -14,7 +14,7 @@ import java.util.Locale;
  * 资源文件配置加载
  *
  */
-@Configuration
+//@Configuration
 public class I18nConfig implements WebMvcConfigurer
 {
     @Bean

@@ -4,12 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.rlc.rlcfmbapi.modules.stereoLayer.response.BaseInfoResponse;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 设备维护记录
  *
  * @author gf
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @JsonIgnoreProperties
 public class PmsInfoResponse extends BaseInfoResponse {

@@ -29,6 +29,7 @@ public class FmbLogService extends CrudService<FmbLogDao, Fmblog> {
 
 	 @Autowired
 	 @Lazy
+	 @DS("cmdbdb")
 	 private LogDao logDao;
 	@DS("fmbdb")
 	public Page<Fmblog> findPage(Page<Fmblog> page, Fmblog fmblog) {

@@ -175,35 +175,35 @@ public class MybatisConfig {
         return null;
     }
 
-//    @Bean(name = "sqlSessionFactoryMaster")
-//    public SqlSessionFactory sqlSessionFactoryMaster(Environment env, @Qualifier("cmdbDataSource") DataSource dataSource) throws Exception
-//    {
-//        return createSqlSessionFactory(env, dataSource);
-//    }
-//
-//    @Bean(name = "sqlSessionFactorySlave")
-//    public SqlSessionFactory sqlSessionFactorySlave(Environment env, @Qualifier(value = "fmbDataSource") DataSource dataSource) throws Exception
-//    {
-//        return createSqlSessionFactory(env, dataSource);
-//    }
-//    @Bean(name = "sqlSessionTemplate")
-//    public DynamicSqlSessionTemplate sqlSessionTemplate(@Qualifier("sqlSessionFactoryMaster") SqlSessionFactory factoryMaster,
-//                                                        @Qualifier("sqlSessionFactorySlave") SqlSessionFactory factorySlave) throws Exception
-//    {
-//        Map<Object, SqlSessionFactory> sqlSessionFactoryMap = new HashMap<>();
-//        sqlSessionFactoryMap.put("cmdbdb", factoryMaster);
-//        sqlSessionFactoryMap.put("fmbdb", factorySlave);
-//
-//        DynamicSqlSessionTemplate customSqlSessionTemplate = new DynamicSqlSessionTemplate(factoryMaster);
-//        customSqlSessionTemplate.setTargetSqlSessionFactorys(sqlSessionFactoryMap);
-//        return customSqlSessionTemplate;
-//    }
-    @Bean(name = "sqlSessionFactory")
-    public SqlSessionFactory sqlSessionFactory(Environment env, @Qualifier("dynamicDataSource") DataSource dataSource) throws Exception {
+    @Bean(name = "sqlSessionFactory_CMDB")
+    public SqlSessionFactory sqlSessionFactoryMaster(Environment env, @Qualifier("cmdbDataSource") DataSource dataSource) throws Exception
+    {
+        return createSqlSessionFactory(env, dataSource);
+    }
+
+    @Bean(name = "sqlSessionFactory_FMB")
+    public SqlSessionFactory sqlSessionFactorySlave(Environment env, @Qualifier(value = "fmbDataSource") DataSource dataSource) throws Exception
+    {
         return createSqlSessionFactory(env, dataSource);
     }
     @Bean(name = "sqlSessionTemplate")
-    public SqlSessionTemplate sqlSessionTemplate(@Qualifier("sqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
-        return new SqlSessionTemplate(sqlSessionFactory);
+    public DynamicSqlSessionTemplate sqlSessionTemplate(@Qualifier("sqlSessionFactory_CMDB") SqlSessionFactory factoryMaster,
+                                                        @Qualifier("sqlSessionFactory_FMB") SqlSessionFactory factorySlave) throws Exception
+    {
+        Map<Object, SqlSessionFactory> sqlSessionFactoryMap = new HashMap<>();
+        sqlSessionFactoryMap.put("cmdbdb", factoryMaster);
+        sqlSessionFactoryMap.put("fmbdb", factorySlave);
+
+        DynamicSqlSessionTemplate customSqlSessionTemplate = new DynamicSqlSessionTemplate(factoryMaster);
+        customSqlSessionTemplate.setTargetSqlSessionFactorys(sqlSessionFactoryMap);
+        return customSqlSessionTemplate;
     }
+//    @Bean(name = "sqlSessionFactory")
+//    public SqlSessionFactory sqlSessionFactory(Environment env, @Qualifier("dynamicDataSource") DataSource dataSource) throws Exception {
+//        return createSqlSessionFactory(env, dataSource);
+//    }
+//    @Bean(name = "sqlSessionTemplate")
+//    public SqlSessionTemplate sqlSessionTemplate(@Qualifier("sqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
+//        return new SqlSessionTemplate(sqlSessionFactory);
+//    }
 }

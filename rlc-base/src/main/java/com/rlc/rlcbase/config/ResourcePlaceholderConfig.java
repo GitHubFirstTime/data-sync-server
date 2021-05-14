@@ -24,14 +24,15 @@ import org.springframework.core.io.ClassPathResource;
  */
 @Configuration
 public class ResourcePlaceholderConfig {
-    Logger logger =  LogManager.getLogger(ResourcePlaceholderConfig.class);
-    String active;
+    static Logger logger =  LogManager.getLogger(ResourcePlaceholderConfig.class);
+    static String active;
     @Bean
-    public PropertySourcesPlaceholderConfigurer propertyConfigurer() {
+    public static PropertySourcesPlaceholderConfigurer propertyConfigurer() {
         active = Global.getConfig("active.evn");
         PropertySourcesPlaceholderConfigurer config = new EncryptPropertyPlaceholderConfigurer();
         YamlPropertiesFactoryBean yaml = new YamlPropertiesFactoryBean();
         yaml.setResources(new ClassPathResource("application-"+active+".yml"));
+//        yaml.setResources(new ClassPathResource("application.yml"));
         logger.info("激活配置文件环境:{}",active);
         config.setProperties(yaml.getObject());
         return config;
