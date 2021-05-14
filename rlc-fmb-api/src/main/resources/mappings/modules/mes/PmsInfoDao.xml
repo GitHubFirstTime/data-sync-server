@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlc.rlcfmbapi.modules.mes.dao.PmsInfoDao">
+    <!--单个设备-->
+    <select id="getPmsInfoOne" resultType="com.rlc.rlcfmbapi.modules.mes.entity.PmsInfoDTO">
+		select * from (select rownum rn,a.* from (SELECT
+		RESPONSIBLESHOPNAME AS "deviceType",
+		case when RESPONSIBLESHOPNAME = 'GHK' then '固化库'
+		when RESPONSIBLESHOPNAME = 'LTK' then '单晶库'
+		when RESPONSIBLESHOPNAME = 'YLK' then '原料库'
+		when RESPONSIBLESHOPNAME = 'CPK' then '成品库'
+		when RESPONSIBLESHOPNAME = 'ZB' then '粘棒机'
+		when RESPONSIBLESHOPNAME = 'TJ' then '脱胶机'
+		when RESPONSIBLESHOPNAME = 'XQ' then '线切机'
+		when RESPONSIBLESHOPNAME = 'QX' then '清洗机'
+		when RESPONSIBLESHOPNAME = 'AOI' then '分选机'
+		when RESPONSIBLESHOPNAME = 'ZZ' then '蒸煮'
+		when RESPONSIBLESHOPNAME = 'DJK' then '单晶库'
+		else RESPONSIBLESHOPNAME
+		end AS "deviceTypeName",
+		EQUIPMENTNAME AS "deviceName",
+		TITLE AS "maintenceType",
+		TITLE AS "maintenceMaterial",
+		SYSID AS "pmsId",
+		CAST(DATEPROJECTEDSTART AS TIMESTAMP) AS "maintenceTime",
+		CAST((DATEPROJECTEDSTART+1) AS TIMESTAMP) AS "nextMaintenceTime",
+		COUNT(*) OVER () total
+		FROM XSITEWORKOrder
+		WHERE
+		EQUIPMENTNAME = #{equipmentName}
+		AND STATE != 'Canceled'
+		ORDER BY DATEPROJECTEDSTART DESC) a
+		where rownum <![CDATA[ <= ]]> #{page_num} * #{page_size})aa where aa.rn <![CDATA[ > ]]>(#{page_num} - 1)*#{page_size}
+    </select>
+    <!--单条维护信息详情-->
+    <select id="getPmsInfoDetail" parameterType="java.lang.String" resultType="com.rlc.rlcfmbapi.modules.mes.entity.PmsInfoDTO">
+        SELECT
+		RESPONSIBLESHOPNAME AS "deviceType",
+		case when RESPONSIBLESHOPNAME = 'GHK' then '固化库'
+		when RESPONSIBLESHOPNAME = 'LTK' then '单晶库'
+		when RESPONSIBLESHOPNAME = 'YLK' then '原料库'
+		when RESPONSIBLESHOPNAME = 'CPK' then '成品库'
+		when RESPONSIBLESHOPNAME = 'ZB' then '粘棒机'
+		when RESPONSIBLESHOPNAME = 'TJ' then '脱胶机'
+		when RESPONSIBLESHOPNAME = 'XQ' then '线切机'
+		when RESPONSIBLESHOPNAME = 'QX' then '清洗机'
+		when RESPONSIBLESHOPNAME = 'AOI' then '分选机'
+		when RESPONSIBLESHOPNAME = 'ZZ' then '蒸煮'
+		when RESPONSIBLESHOPNAME = 'DJK' then '单晶库'
+		else RESPONSIBLESHOPNAME
+		end AS "deviceTypeName",
+		EQUIPMENTNAME AS "deviceName",
+		TITLE AS "maintenceType",
+		TITLE AS "maintenceMaterial",
+		CAST(DATEPROJECTEDSTART AS TIMESTAMP) AS "maintenceTime",
+		CAST((DATEPROJECTEDSTART+1) AS TIMESTAMP) AS "nextMaintenceTime"
+		FROM XSITEWORKOrder
+        WHERE
+          SYSID = #{sysId}
+        AND STATE != 'Canceled'
+        ORDER BY DATEPROJECTEDSTART DESC
+    </select>
+	<select id="getPmsOpenInfo" resultType="com.rlc.rlcfmbapi.modules.mes.entity.PmsInfoDTO">
+		SELECT
+		RESPONSIBLESHOPNAME AS "deviceType",
+		case when RESPONSIBLESHOPNAME = 'GHK' then '固化库'
+		when RESPONSIBLESHOPNAME = 'LTK' then '单晶库'
+		when RESPONSIBLESHOPNAME = 'YLK' then '原料库'
+		when RESPONSIBLESHOPNAME = 'CPK' then '成品库'
+		when RESPONSIBLESHOPNAME = 'ZB' then '粘棒机'
+		when RESPONSIBLESHOPNAME = 'TJ' then '脱胶机'
+		when RESPONSIBLESHOPNAME = 'XQ' then '线切机'
+		when RESPONSIBLESHOPNAME = 'QX' then '清洗机'
+		when RESPONSIBLESHOPNAME = 'AOI' then '分选机'
+		when RESPONSIBLESHOPNAME = 'ZZ' then '蒸煮'
+		when RESPONSIBLESHOPNAME = 'DJK' then '单晶库'
+		else RESPONSIBLESHOPNAME
+		end AS "deviceTypeName",
+		EQUIPMENTNAME AS "deviceName",
+		TITLE AS "maintenceType",
+		TITLE AS "maintenceMaterial",
+		SYSID AS "pmsId",
+		CAST(DATEPROJECTEDSTART AS TIMESTAMP) AS "maintenceTime",
+		CAST((DATEPROJECTEDSTART+1) AS TIMESTAMP) AS "nextMaintenceTime"
+		FROM XSITEWORKOrder
+		WHERE STATE = 'Active'
+		AND ROWNUM <![CDATA[ < ]]> 50
+	</select>
+</mapper>

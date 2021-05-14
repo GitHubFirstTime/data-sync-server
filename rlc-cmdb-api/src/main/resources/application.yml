@@ -8,10 +8,15 @@ logging:
 #指定映射xml文件位置
 #classpath对应resource，*.xml表示配置mapper下所有xml文件
 mybatis:
-  #  config-location: classpath:/mybatis/mybatis-config.xml
   mapper-locations: classpath:/mappings/modules/*/*.xml
   # 注意：对应实体类的路径
   type-aliases-package: com.rlc.rlccmdbapi.modules.fmb.entity,com.rlc.rlccmdbapi.modules.cmdb.entity
     # 支持通过 Mapper 接口参数来传递分页参数
-  configuration:
-      log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#  configuration:
+#      log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  config-location: classpath:/mybatis/mybatis-config.xml
+
+# Swagger配置
+swagger:
+  # 是否开启swagger
+  enabled: true

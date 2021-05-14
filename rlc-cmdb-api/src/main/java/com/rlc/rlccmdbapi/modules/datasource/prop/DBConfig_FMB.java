@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  * @date 2021/4/23 21:42
  */
 //@PropertySource(value = "classpath:/application-${spring.profiles.active}.yml",encoding = "utf-8",factory = YmlPropertySourceFactory.class)
-@ConfigurationProperties(prefix = "spring.datasource.fmbdb")
+//@ConfigurationProperties(prefix = "spring.datasource.fmbdb")
 @Data
 public class DBConfig_FMB {
     private String url;

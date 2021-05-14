@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlc.rlcfmbapi.modules.mes.dao.EqpDao">
+    <select id="findList" resultType="com.rlc.rlcfmbapi.modules.mes.entity.EqpDTO">
+        SELECT
+            M . ID AS "id",
+            M .eqpName AS "eqpName",
+            M .eqpType AS "eqpType",
+            M . FLOOR,
+            M .RECIPENAME,
+            /*n.state AS "eqpRunState",*/
+            o.EAPSTATE AS "eqpRunState",
+            o.EQPMODE AS "controlMode",
+            o.DISPATCHINGMODE,
+            o.AVAILABLECAPACITY
+        FROM
+            (
+                SELECT
+                    A .sysid AS ID,
+                    A . NAME AS EQPNAME,
+                    b. FLOOR,
+                    b.RECIPENAME,
+                    c.EQPKIND AS EQPTYPE
+                FROM
+                    FWEQPEQUIPMENT A,
+                    FABEQPEQUIPMENTEXT b,
+                    FABEQPTYPEEXT c
+                WHERE
+                    b. PARENT = A .sysid
+                AND c. PARENT = A .EQPTYPE
+                <if test="eqpType != null and eqpType !=''">
+                    AND c.EQPKIND = #{eqpType}
+                </if>
+            ) M
+        LEFT JOIN FWEQPCURRENTSTATE n ON n.EQUIPMENTNAME = M .eqpName
+        INNER JOIN FABEQPCURRENTSTATEEXT o ON o. PARENT = n.sysid
+    </select>
+    <select id="findEqpStateList" resultType="com.rlc.rlcfmbapi.modules.mes.entity.EqpDTO">
+        SELECT
+            M . ID AS "id",
+            M .eqpName AS "eqpName",
+            M .eqpType AS "eqpType",
+            n.state AS "eqpRunState"
+        FROM
+            (
+                SELECT
+                    A .sysid AS ID,
+                    A . NAME AS EQPNAME,
+                    c.EQPKIND AS EQPTYPE
+                FROM
+                    FWEQPEQUIPMENT A,
+                    FABEQPTYPEEXT c
+                WHERE
+                    c. PARENT = A .EQPTYPE
+                <if test="eqpType != null and eqpType !=''">
+                    AND c.EQPKIND = #{eqpType}
+                </if>
+
+            ) M
+        LEFT JOIN FWEQPCURRENTSTATE n ON n.EQUIPMENTNAME = M .eqpName
+        INNER JOIN FABEQPCURRENTSTATEEXT o ON o. PARENT = n.sysid
+    </select>
+    <select id="getEqpCurrentInfo" resultType="com.rlc.rlcfmbapi.modules.mes.entity.EqpDTO">
+        SELECT
+            M . ID AS "id",
+            M .eqpName AS "eqpName",
+            M .eqpType AS "eqpType",
+            M .eqpType AS "eqpTypeName",
+            M.RECIPENAME AS "recipeName",
+            n.state AS "eqpRunState",
+            o.EQPMODE AS "eqpControlMode",
+            o.DISPATCHINGMODE AS "eqpDispatchMode",
+            n.CAPACITY AS "currentCapacity",
+            o.AVAILABLECAPACITY AS "totalCapacity"
+        FROM
+            (
+                SELECT
+                    A .sysid AS ID,
+                    A . NAME AS EQPNAME,
+                    b.RECIPENAME,
+                    c.EQPKIND AS EQPTYPE
+                FROM
+                    FWEQPEQUIPMENT A,
+                    FABEQPEQUIPMENTEXT b,
+                    FABEQPTYPEEXT c
+                WHERE
+                    b. PARENT = A .sysid
+                AND c. PARENT = A .EQPTYPE
+                AND  A.NAME = #{eqpName}
+            ) M
+        LEFT JOIN FWEQPCURRENTSTATE n ON n.EQUIPMENTNAME = M .eqpName
+        INNER JOIN FABEQPCURRENTSTATEEXT o ON o. PARENT = n.sysid
+    </select>
+   <!-- <select id="findEqpLotList" resultType="Map">
+        SELECT
+            x.ORDERNUMBER,
+            t3.subtotallength AS "subTotalLength",
+            t3.color as "color",
+            t3.ASSEMBLYTYPE as "ASSEMBLYTYPE"
+        FROM(SELECT
+            a.LOTOBJECT,
+            b.ORDERNUMBER
+        FROM
+            FWWIPTRANSACTION a,
+            FWLOT b
+        WHERE
+            b.SYSID = a.LOTOBJECT
+        AND	a.INLOCATION = 'XQ-A2-12'
+        AND a.LOTOBJECT = '00000e31.1906aa0a.5f71b560.0000c4c1.9215'
+        AND a.ACTIVITY = 'JobIn')x
+        LEFT JOIN FABLOTCUSTEXT t3 ON t3.PARENT = x.LOTOBJECT
+    </select>-->
+    <select id="findEqpLotList_old" resultType="Map">
+        SELECT
+            x.ORDERNUMBER,
+			x.APPID AS "lotId",
+            t3.subtotallength AS "subTotalLength",
+            t3.color as "color",
+            t3.ASSEMBLYTYPE as "ASSEMBLYTYPE",
+			TO_DATE(SUBSTR(t4.txntimestamp,0,15),'yyyy-MM-dd hh24:mi:ss') AS "jobInTime"
+        FROM(SELECT
+            a.LOTOBJECT,
+            b.APPID,
+            b.ORDERNUMBER
+        FROM
+            FWWIPSTEP a,
+            FWLOT b
+        WHERE
+            b.SYSID = a.LOTOBJECT
+        AND	a.TRACKINLOCATION = #{eqpName}
+        AND (b.PROCESSINGSTATUS='Active' OR b.PROCESSINGSTATUS='Hold'))x
+        LEFT JOIN FABLOTCUSTEXT t3 ON t3.PARENT = x.LOTOBJECT
+        LEFT JOIN FWWIPTRANSACTION t4 ON t4.wipid = x.APPID
+    </select>
+    <select id="findEqpLotList" resultType="Map">
+        SELECT m.* FROM(SELECT
+						x.ORDERNUMBER,
+						x.APPID AS "lotId",
+            t3.subtotallength AS "subTotalLength",
+            t3.color as "color",
+            t3.ASSEMBLYTYPE as "ASSEMBLYTYPE"
+			,TO_DATE(SUBSTR(t4.txntimestamp,0,15),'yyyy-MM-dd hh24:mi:ss') AS "jobInTime"
+        FROM(SELECT
+            a.LOTOBJECT,
+            b.APPID,
+            b.ORDERNUMBER
+        FROM
+            FWWIPSTEP a,
+            FWLOT b
+        WHERE
+            b.SYSID = a.LOTOBJECT
+        AND	a.TRACKINLOCATION = #{eqpName}
+        AND (b.PROCESSINGSTATUS='Active' OR b.PROCESSINGSTATUS='Hold'))x
+        LEFT JOIN FABLOTCUSTEXT t3 ON t3.PARENT = x.LOTOBJECT
+				LEFT JOIN FWWIPTRANSACTION t4 ON t4.wipid = x.APPID  AND T4.ACTIVITY='JobIn' ORDER BY "jobInTime" DESC
+)m WHERE ROWNUM=1
+    </select>
+</mapper>

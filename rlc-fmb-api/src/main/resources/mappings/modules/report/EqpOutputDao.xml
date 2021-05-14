@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlc.rlcfmbapi.modules.report.dao.EqpOutputDao">
+    <!--每周产能-->
+    <select id="getOutputWeekly" parameterType="java.lang.String" resultType="com.rlc.rlcfmbapi.modules.report.entity.EqpOutputDTO" >
+        SELECT ROWNUM AS "sort",daytime,TRACKINLOCATION,qty FROM
+        (SELECT
+        count( t.wipid ) qty,
+        #{eqpType} TRACKINLOCATION,
+        '星期一' daytime
+        FROM
+        REP_WIP_HISTORY t
+        WHERE
+        t.ACTIVITY = 'JobIn'
+        AND t.EQPTYPE = #{eqpType}
+        AND trunc( SYSDATE, 'd' ) + 1+8 / 24 <![CDATA[ < ]]> to_timestamp( t.txntimestamp, 'yyyymmdd HH24:MI:SS:FF' )
+        AND to_timestamp( t.txntimestamp, 'yyyymmdd HH24:MI:SS:FF' ) <![CDATA[ <=  ]]> trunc( SYSDATE, 'd' ) + 2+8 / 24 UNION ALL
+        SELECT
+        count( t.wipid ) qty,
+        #{eqpType} TRACKINLOCATION,
+        '星期二' daytime
+        FROM
+        REP_WIP_HISTORY t
+        WHERE
+        t.ACTIVITY = 'JobIn'
+        AND t.EQPTYPE = #{eqpType}
+        AND trunc( SYSDATE, 'd' ) + 2+8 / 24 <![CDATA[ < ]]> to_timestamp( t.txntimestamp, 'yyyymmdd HH24:MI:SS:FF' )
+        AND to_timestamp( t.txntimestamp, 'yyyymmdd HH24:MI:SS:FF' ) <![CDATA[ <=  ]]> trunc( SYSDATE, 'd' ) + 3+8 / 24 UNION ALL
+        SELECT
+        count( t.wipid ) qty,
+        #{eqpType} TRACKINLOCATION,
+        '星期三' daytime
+        FROM
+        REP_WIP_HISTORY t
+        WHERE
+        t.ACTIVITY = 'JobIn'
+        AND t.EQPTYPE = #{eqpType}
+        AND trunc( SYSDATE, 'd' ) + 3+8 / 24 <![CDATA[ < ]]> to_timestamp( t.txntimestamp, 'yyyymmdd HH24:MI:SS:FF' )
+        AND to_timestamp( t.txntimestamp, 'yyyymmdd HH24:MI:SS:FF' ) <![CDATA[ <=  ]]> trunc( SYSDATE, 'd' ) + 4+8 / 24 UNION ALL
+        SELECT
+        count( t.wipid ) qty,
+        #{eqpType} TRACKINLOCATION,
+        '星期四' daytime
+        FROM
+        REP_WIP_HISTORY t
+        WHERE
+        t.ACTIVITY = 'JobIn'
+        AND t.EQPTYPE = #{eqpType}
+        AND trunc( SYSDATE, 'd' ) + 4+8 / 24 <![CDATA[ < ]]> to_timestamp( t.txntimestamp, 'yyyymmdd HH24:MI:SS:FF' )
+        AND to_timestamp( t.txntimestamp, 'yyyymmdd HH24:MI:SS:FF' ) <![CDATA[ <=  ]]> trunc( SYSDATE, 'd' ) + 5+8 / 24 UNION ALL
+        SELECT
+        count( t.wipid ) qty,
+        #{eqpType} TRACKINLOCATION,
+        '星期五' daytime
+        FROM
+        REP_WIP_HISTORY t
+        WHERE
+        t.ACTIVITY = 'JobIn'
+        AND t.EQPTYPE = #{eqpType}
+        AND trunc( SYSDATE, 'd' ) + 5+8 / 24 <![CDATA[ < ]]> to_timestamp( t.txntimestamp, 'yyyymmdd HH24:MI:SS:FF' )
+        AND to_timestamp( t.txntimestamp, 'yyyymmdd HH24:MI:SS:FF' ) <![CDATA[ <=  ]]> trunc( SYSDATE, 'd' ) + 6+8 / 24 UNION ALL
+        SELECT
+        count( t.wipid ) qty,
+        #{eqpType} TRACKINLOCATION,
+        '星期六' daytime
+        FROM
+        REP_WIP_HISTORY t
+        WHERE
+        t.ACTIVITY = 'JobIn'
+        AND t.EQPTYPE = #{eqpType}
+        AND trunc( SYSDATE, 'd' ) + 6+8 / 24 <![CDATA[ < ]]> to_timestamp( t.txntimestamp, 'yyyymmdd HH24:MI:SS:FF' )
+        AND to_timestamp( t.txntimestamp, 'yyyymmdd HH24:MI:SS:FF' ) <![CDATA[ <=  ]]> trunc( SYSDATE, 'd' ) + 7+8 / 24 UNION ALL
+        SELECT
+        count( t.wipid ) qty,
+        #{eqpType} TRACKINLOCATION,
+        '星期日' daytime
+        FROM
+        REP_WIP_HISTORY t
+        WHERE
+        t.ACTIVITY = 'JobIn'
+        AND t.EQPTYPE = #{eqpType}
+        AND trunc( SYSDATE, 'd' ) + 7+8 / 24 <![CDATA[ < ]]> to_timestamp( t.txntimestamp, 'yyyymmdd HH24:MI:SS:FF' )
+        AND to_timestamp( t.txntimestamp, 'yyyymmdd HH24:MI:SS:FF' ) <![CDATA[ <=  ]]> trunc( SYSDATE, 'd' ) + 8+8 / 24)
+    </select>
+    <!--今日产能-->
+    <select id="getOutputDaily" parameterType="java.lang.String" resultType="com.rlc.rlcfmbapi.modules.report.entity.EqpOutputDTO">
+        SELECT
+        count(t.wipid) qty,
+        #{eqpType} TRACKINLOCATION ,
+        '今日' daytime,
+		'3' sort
+        FROM
+        REP_WIP_HISTORY t
+        WHERE
+        t.ACTIVITY = 'JobIn'
+        AND t.EQPTYPE = #{eqpType}
+        and to_timestamp(t.txntimestamp,'yyyymmdd HH24:MI:SS:FF')  <![CDATA[ > ]]> trunc(sysdate-8/24)+8/24 and to_timestamp(t.txntimestamp,'yyyymmdd HH24:MI:SS:FF') <![CDATA[ < ]]> sysdate
+        UNION all
+        SELECT
+        count(t.wipid) qty,
+        #{eqpType} TRACKINLOCATION ,
+        '昨日夜班' daytime,
+		'2' sort
+        FROM
+        REP_WIP_HISTORY t
+        WHERE
+        t.ACTIVITY = 'JobIn'
+        AND t.EQPTYPE = #{eqpType}
+        and to_timestamp(t.txntimestamp,'yyyymmdd HH24:MI:SS:FF')  <![CDATA[ > ]]> trunc(sysdate-8/24)-1+20/24 and to_timestamp(t.txntimestamp,'yyyymmdd HH24:MI:SS:FF') <![CDATA[ < ]]> trunc(sysdate-8/24)+8/24
+        UNION all
+        SELECT
+        count(t.wipid) qty,
+        #{eqpType} TRACKINLOCATION ,
+        '昨日白班' daytime,
+		'1' sort
+        FROM
+        REP_WIP_HISTORY t
+        WHERE
+        t.ACTIVITY = 'JobIn'
+        AND t.EQPTYPE = #{eqpType}
+        and to_timestamp(t.txntimestamp,'yyyymmdd HH24:MI:SS:FF') <![CDATA[ > ]]> trunc(sysdate-8/24)-1+8/24 and to_timestamp(t.txntimestamp,'yyyymmdd HH24:MI:SS:FF') <![CDATA[ < ]]> trunc(sysdate-8/24)-1+20/24
+    </select>
+    <!--本月产能-->
+    <select id="getOutputMonthly" parameterType="java.lang.String" resultType="com.rlc.rlcfmbapi.modules.report.entity.EqpOutputDTO">
+        SELECT ROWNUM AS "sort",daytime,TRACKINLOCATION,qty FROM
+        (select
+        count(t.wipid) qty,
+        #{eqpType} TRACKINLOCATION ,
+        to_char(to_date("SUBSTR"(t.txntimestamp,0,15),'yyyymmdd HH24:MI:SS'),'WW') as daytime       　　
+        FROM
+        REP_WIP_HISTORY t
+        WHERE
+        t.ACTIVITY = 'JobIn'
+        AND t.EQPTYPE = #{eqpType}
+        AND to_timestamp(t.txntimestamp,'yyyymmdd HH24:MI:SS:FF') <![CDATA[ > ]]>  Trunc(SYSDATE, 'MM') and to_timestamp(t.txntimestamp,'yyyymmdd HH24:MI:SS:FF') <![CDATA[ < ]]> LAST_DAY(Trunc(SYSDATE, 'MONTH'))+1
+        group by to_char(to_date("SUBSTR"(t.txntimestamp,0,15),'yyyymmdd HH24:MI:SS'),'WW')
+        ORDER BY daytime)
+    </select>
+</mapper>

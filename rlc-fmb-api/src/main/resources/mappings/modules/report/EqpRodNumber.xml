@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlc.rlcfmbapi.modules.report.dao.EqpRodNumberDao">
+    <!--晶棒数量-->
+    <select id="getEqpRodNumber" parameterType="java.lang.String" resultType="com.rlc.rlcfmbapi.modules.report.entity.EqpRodNumberDTO">
+        select eqptype as eqpType,c as rodNumber from rep_inprocess_count WHERE eqptype = #{device_type}
+    </select>
+
+</mapper>

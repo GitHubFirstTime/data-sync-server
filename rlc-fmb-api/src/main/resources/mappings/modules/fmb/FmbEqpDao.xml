@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlc.rlcfmbapi.modules.fmb.dao.FmbEqpDao">
+    <sql id="eqpColumns">
+        a.id,
+        a.eqp_name  as "eqpName",
+        a.eqp_code as "eqpCode",
+        a.eqp_state as "eqpState",
+        a.eqp_type as "eqpType",
+        a.take_over as "takeOver",
+        a.del_flag
+    </sql>
+    <sql id="eqpJoins">
+
+    </sql>
+    <select id="findList" resultType="com.rlc.rlcfmbapi.modules.fmb.entity.FmbEqp">
+        SELECT
+        <include refid="eqpColumns" />
+        FROM fmb_eqp a
+        <include refid="eqpJoins" />
+        WHERE 1=1
+        <if test="eqpName != null and eqpName != ''">
+            AND a.name LIKE
+            <if test="dbName == 'oracle'">'%'||#{eqpName}||'%'</if>
+            <if test="dbName == 'mysql'">CONCAT('%', #{eqpName}, '%')</if>
+        </if>
+        ORDER BY a.create_date DESC
+    </select>
+    <insert id="insertBatch">
+        INSERT  ALL
+        <foreach collection ="list" item="eqp" index="index">
+            INTO fmb_eqp
+            (id, EQP_CODE, EQP_NAME, EQP_TYPE,CONTROL_MODE, DISPATCH_MODE, TRANSPORT_MODE, EQP_STATE,
+             MES_STATE, TAKE_OVER, CREATE_DATE, DEL_FLAG)
+            VALUES
+                (#{eqp.id,jdbcType=VARCHAR}, #{eqp.eqpCode,jdbcType=VARCHAR},#{eqp.eqpName,jdbcType=VARCHAR},
+                #{eqp.eqpType,jdbcType=VARCHAR}, #{eqp.controlMode,jdbcType=VARCHAR},#{eqp.dispatchMode,jdbcType=VARCHAR},#{eqp.transportMode,jdbcType=VARCHAR},
+                #{eqp.eqpState,jdbcType=VARCHAR}, #{eqp.mesState,jdbcType=VARCHAR},#{eqp.takeOver,jdbcType=VARCHAR} ,#{eqp.createDate,jdbcType=TIMESTAMP}
+                , #{eqp.delFlag,jdbcType=CHAR})
+        </foreach >
+        SELECT 1 FROM DUAL
+    </insert>
+    <update id="updateEqpOutManageBatch" parameterType="java.util.List" >
+        update fmb_eqp
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="MES_STATE =case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <!-- <if test="i.groupId!=null"> -->
+                    when id=#{i.id} then #{i.mesState}
+                    <!--  </if> -->
+                </foreach>
+            </trim>
+            <!--<trim prefix="FOLDER_ID =case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.folderId!=null and i.folderId!=''">
+                        when id=#{i.id} then #{i.folderId}
+                    </if>
+                </foreach>
+            </trim>-->
+        </trim>
+        where
+        <foreach collection="list" separator="or" item="i" index="index" >
+            id=#{i.id}
+        </foreach>
+    </update>
+    <update id="updateBatchByMesData" parameterType="java.util.List" >
+        update fmb_eqp
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="EQP_NAME =case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.eqpName !=null and i.eqpName !=''">
+                        when id=#{i.id} then #{i.eqpName}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="EQP_STATE =case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.eqpState !=null and i.eqpState !=''">
+                        when id=#{i.id} then #{i.eqpState}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="CONTROL_MODE =case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.controlMode !=null and i.controlMode !=''">
+                        when id=#{i.id} then #{i.controlMode}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="DISPATCH_MODE =case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.dispatchMode !=null and i.dispatchMode !=''">
+                        when id=#{i.id} then #{i.dispatchMode}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where
+        <foreach collection="list" separator="or" item="i" index="index" >
+            id=#{i.id}
+        </foreach>
+    </update>
+</mapper>

@@ -1,12 +1,14 @@
 package com.rlc.rlccmdbapi.modules.cmdb.dao;
 
 import com.rlc.rlcbase.persistence.CrudDao;
+import com.rlc.rlcbase.persistence.annotation.DS;
 import com.rlc.rlcbase.persistence.annotation.MyBatisDao;
 import com.rlc.rlccmdbapi.modules.cmdb.entity.CmdbModel;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+@DS("cmdbdb")
 @MyBatisDao
 public interface CmdbModelDao extends CrudDao<CmdbModel> {
     public List<CmdbModel> findModelList(CmdbModel cmdbModel) throws Exception;

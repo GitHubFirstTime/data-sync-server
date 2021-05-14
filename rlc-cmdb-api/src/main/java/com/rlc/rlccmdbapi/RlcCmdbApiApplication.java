@@ -15,6 +15,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerA
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
@@ -23,11 +24,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class,DruidDataSourceAutoConfigure.class, DataSourceTransactionManagerAutoConfiguration.class},
-scanBasePackages = {"com.rlc.rlcbase","com.rlc.rlccmdbapi"}
+scanBasePackages = {"com.rlc.rlcbase","com.rlc.rlccmdbapi","com.rlc.rlcframework"}
 )
 //@MapperScan({"com.rlc.cmdbServer.modules.test.dao","com.rlc.cmdbServer.modules.cmdb.dao"})
-@EnableConfigurationProperties({DBConfig_CMDB.class, DBConfig_FMB.class})
+//@EnableConfigurationProperties({DBConfig_CMDB.class, DBConfig_FMB.class})
 @EnableTransactionManagement(proxyTargetClass=true)//开启事务 用CGLib代理方式
+@EnableSwagger2
 public class RlcCmdbApiApplication {
 
     public static void main(String[] args) {

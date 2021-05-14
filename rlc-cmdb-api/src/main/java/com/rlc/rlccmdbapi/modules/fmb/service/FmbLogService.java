@@ -3,11 +3,17 @@
  */
 package com.rlc.rlccmdbapi.modules.fmb.service;
 
+import com.rlc.rlcbase.common.IdGen;
 import com.rlc.rlcbase.pageHelper.page.Page;
+import com.rlc.rlcbase.persistence.annotation.DS;
 import com.rlc.rlcbase.persistence.service.CrudService;
 import com.rlc.rlcbase.utils.DateUtils;
+import com.rlc.rlccmdbapi.modules.cmdb.dao.LogDao;
 import com.rlc.rlccmdbapi.modules.fmb.dao.FmbLogDao;
-import com.rlc.rlccmdbapi.modules.fmb.entity.Log;
+import com.rlc.rlccmdbapi.modules.fmb.entity.Fmblog;
+import com.rlc.rlccmdbapi.modules.fmb.entity.Fmblog;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,24 +25,24 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional(readOnly = true)
-public class FmbLogService extends CrudService<FmbLogDao, Log> {
+public class FmbLogService extends CrudService<FmbLogDao, Fmblog> {
 
-	/*
-	 * @Autowired private LogDao logDao;
-	 */
-//	@DS("cmdbdb")
-	public Page<Log> findPage(Page<Log> page, Log log) {
+	 @Autowired
+	 @Lazy
+	 private LogDao logDao;
+	@DS("fmbdb")
+	public Page<Fmblog> findPage(Page<Fmblog> page, Fmblog fmblog) {
 
 		// 设置默认时间范围，默认当前月
-		if (log.getBeginDate() == null){
-			log.setBeginDate(DateUtils.setDays(DateUtils.parseDate(DateUtils.getDate()), 1));
+		if (fmblog.getBeginDate() == null){
+			fmblog.setBeginDate(DateUtils.setDays(DateUtils.parseDate(DateUtils.getDate()), 1));
 		}
-		if (log.getEndDate() == null){
-			log.setEndDate(DateUtils.addMonths(log.getBeginDate(), 1));
+		if (fmblog.getEndDate() == null){
+			fmblog.setEndDate(DateUtils.addMonths(fmblog.getBeginDate(), 1));
 		}
 
 		try {
-			return super.findPage(page, log);
+			return super.findPage(page, fmblog);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -53,5 +59,21 @@ public class FmbLogService extends CrudService<FmbLogDao, Log> {
 		
 		dao.empty();
 	}
+	public void saveAll() throws Exception{
+		com.rlc.rlccmdbapi.modules.cmdb.entity.Log log = new com.rlc.rlccmdbapi.modules.cmdb.entity.Log();
+		log.setId(IdGen.uuid());
+		log.setIsNewRecord(true);
+		log.setType("1");
+		log.setTitle("cmdb事务测试--log2");
 
+		com.rlc.rlccmdbapi.modules.fmb.entity.Fmblog fmbLog = new com.rlc.rlccmdbapi.modules.fmb.entity.Fmblog();
+		fmbLog.setTitle("fmb事务测试--log2");
+		fmbLog.setId(IdGen.uuid());
+		fmbLog.setIsNewRecord(true);
+		fmbLog.setType("1");
+		logDao.insert(log);
+		int a=0;
+		int x = 1/a;
+		dao.insert(fmbLog);
+	}
 }

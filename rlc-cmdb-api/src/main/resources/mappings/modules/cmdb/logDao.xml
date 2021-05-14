@@ -42,26 +42,16 @@
             </if>
         ORDER BY a.create_date DESC
     </select>
-    <insert id="save" parameterType="Log" useGeneratedKeys="true" keyProperty="id">
-		insert into sys_log
-		(
-			`username`,
-			`operation`,
-			`method`,
-			`params`,
-			`time`,
-			`ip`,
-			`create_date`
-		)
-		values
-		(
-			#{username},
-			#{operation},
-			#{method},
-			#{params},
-			#{time},
-			#{ip},
-			#{createDate}
+    <insert id="insert">
+		INSERT INTO sys_log(
+			id,
+			type,
+			title
+		) VALUES (
+			#{id},
+			#{type},
+			#{title}
+
 		)
 	</insert>
 </mapper>

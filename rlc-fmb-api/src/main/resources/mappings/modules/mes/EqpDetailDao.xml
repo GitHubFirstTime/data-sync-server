@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlc.rlcfmbapi.modules.mes.dao.EqpDetailDao">
+    <select id="getEQPDetailsOne" parameterType="java.lang.String" resultType="com.rlc.rlcfmbapi.modules.mes.entity.EqpDetailDTO" >
+        SELECT
+        M.ID AS "id",
+        M .eqpName AS "eqpName",
+        M .EQPKIND AS "eqpType",
+        M . FLOOR,
+        M .RECIPENAME ,
+        o.EAPSTATE AS "eqpRunState",
+        o.EQPMODE AS "eqpControlMode",
+        o.DISPATCHINGMODE,
+        o.AVAILABLECAPACITY
+        FROM
+        (
+        SELECT
+        A .sysid AS ID,
+        A . NAME AS EQPNAME,
+        b. FLOOR,
+        b.RECIPENAME,
+        c.EQPKIND
+        FROM
+        FWEQPEQUIPMENT A,
+        FABEQPEQUIPMENTEXT b,
+        FABEQPTYPEEXT c
+        WHERE
+        b. PARENT = A .sysid
+        AND c. PARENT = A .EQPTYPE
+        ) M
+        LEFT JOIN FWEQPCURRENTSTATE n ON n.EQUIPMENTNAME = M .eqpName
+        INNER JOIN FABEQPCURRENTSTATEEXT o ON o. PARENT = n.sysid
+        WHERE M .eqpName = #{device_name}
+    </select>
+    <!--某一类设备详情列表-->
+    <select id="getEQPDetailsList" parameterType="java.lang.String" resultType="com.rlc.rlcfmbapi.modules.mes.entity.EqpDetailDTO" >
+        SELECT
+        M . ID AS "id",
+        M .eqpName AS "eqpName",
+        M .eqpType AS "eqpType",
+        M . FLOOR,
+        M .RECIPENAME,
+        o.EAPSTATE AS "eqpRunState",
+        o.EQPMODE AS "eqpControlMode",
+        o.DISPATCHINGMODE,
+        o.AVAILABLECAPACITY
+        FROM
+        (
+        SELECT
+        A .sysid AS ID,
+        A . NAME AS EQPNAME,
+        b. FLOOR,
+        b.RECIPENAME,
+        #{eqpType} AS EQPTYPE
+        FROM
+        FWEQPEQUIPMENT A,
+        FABEQPEQUIPMENTEXT b,
+        FABEQPTYPEEXT c
+        WHERE
+        b. PARENT = A .sysid
+        AND c. PARENT = A .EQPTYPE
+        AND c.EQPKIND = #{eqpType}
+        ) M
+        LEFT JOIN FWEQPCURRENTSTATE n ON n.EQUIPMENTNAME = M .eqpName
+        INNER JOIN FABEQPCURRENTSTATEEXT o ON o. PARENT = n.sysid
+    </select>
+    <!--单台设备运行状态-->
+    <select id="getEqpRunStatusInfo" parameterType="java.lang.String" resultType="com.rlc.rlcfmbapi.modules.mes.entity.EqpDetailDTO" >
+       SELECT
+        M.ID AS "id",
+        M .eqpName AS "eqpName",
+        M .EQPKIND AS "eqpType",
+        o.EAPSTATE AS "eqpRunState"
+        FROM
+        (
+        SELECT
+        A .sysid AS ID,
+        A . NAME AS EQPNAME,
+        c.EQPKIND
+        FROM
+        FWEQPEQUIPMENT A,
+        FABEQPEQUIPMENTEXT b,
+        FABEQPTYPEEXT c
+        WHERE
+        b. PARENT = A .sysid
+        AND c. PARENT = A .EQPTYPE
+        ) M
+        LEFT JOIN FWEQPCURRENTSTATE n ON n.EQUIPMENTNAME = M .eqpName
+        INNER JOIN FABEQPCURRENTSTATEEXT o ON o. PARENT = n.sysid
+        WHERE M .eqpName = #{device_name}
+    </select>
+    <!--单台设备运行状态统计信息-->
+    <select id="getEqpRunStatusStatisticsOne" parameterType="java.lang.String" resultType="com.rlc.rlcfmbapi.modules.mes.entity.EqpDetailDTO">
+        SELECT
+        M .eqpName AS "eqpName",
+        o.EAPSTATE AS "eqpRunState",
+		COUNT(o.EAPSTATE) AS "totalNumber"
+        FROM
+        (
+        SELECT
+        A .sysid AS ID,
+        A . NAME AS EQPNAME,
+        c.EQPKIND
+        FROM
+        FWEQPEQUIPMENT A,
+        FABEQPEQUIPMENTEXT b,
+        FABEQPTYPEEXT c
+        WHERE
+        b. PARENT = A .sysid
+        AND c. PARENT = A .EQPTYPE
+        ) M
+        LEFT JOIN FWEQPCURRENTSTATE n ON n.EQUIPMENTNAME = M .eqpName
+        INNER JOIN FABEQPCURRENTSTATEEXT o ON o. PARENT = n.sysid
+		GROUP BY o.EAPSTATE, M .eqpName
+		HAVING M.eqpName = #{device_name}
+    </select>
+    <!-- 某类设备运行状态统计信息-->
+    <select id="getEqpRunStatusStatistics" parameterType="java.lang.String" resultType="com.rlc.rlcfmbapi.modules.mes.entity.EqpDetailDTO">
+        SELECT count(1) AS "totalNumber",
+                 "eqpType",
+                 "eqpRunState" from
+        (SELECT
+        M .eqpName AS "eqpName",
+        M .EQPKIND AS "eqpType",
+        o.EAPSTATE AS "eqpRunState"
+        FROM
+        (
+        SELECT
+        A .sysid AS ID,
+        A . NAME AS EQPNAME,
+        c.EQPKIND
+        FROM
+        FWEQPEQUIPMENT A,
+        FABEQPEQUIPMENTEXT b,
+        FABEQPTYPEEXT c
+        WHERE
+        b. PARENT = A .sysid
+        AND c. PARENT = A .EQPTYPE
+        ) M
+        LEFT JOIN FWEQPCURRENTSTATE n ON n.EQUIPMENTNAME = M .eqpName
+        INNER JOIN FABEQPCURRENTSTATEEXT o ON o. PARENT = n.sysid
+        WHERE M .EQPKIND != 'OHT' AND M .EQPKIND != 'HCX' AND M .EQPKIND != 'HCQ' AND M .EQPKIND != 'SBZ' AND M .EQPKIND != 'RGV' AND M .EQPKIND != 'ZX' AND o.EAPSTATE != 'Others' AND o.EAPSTATE != 'Other')
+		WHERE "eqpType" = #{eqpType}
+        group by "eqpType","eqpRunState"
+    </select>
+    <!--设备容量统计-->
+    <select id="getEQPCapacity" parameterType="java.lang.String" resultType="com.rlc.rlcfmbapi.modules.mes.entity.EqpDetailDTO">
+        SELECT
+        M .EQPKIND AS "eqpType",
+        SUM(n.CAPACITY) AS "currentCapacity",
+        SUM(o.AVAILABLECAPACITY) AS "totalCapacity"
+        FROM
+        (
+        SELECT
+        A .sysid AS ID,
+        A . NAME AS EQPNAME,
+        b. FLOOR,
+        b.RECIPENAME,
+				c.EQPKIND
+        FROM
+        FWEQPEQUIPMENT A,
+        FABEQPEQUIPMENTEXT b,
+        FABEQPTYPEEXT c
+        WHERE
+        b. PARENT = A .sysid
+        AND c. PARENT = A .EQPTYPE
+        ) M
+        LEFT JOIN FWEQPCURRENTSTATE n ON n.EQUIPMENTNAME = M .eqpName
+        INNER JOIN FABEQPCURRENTSTATEEXT o ON o. PARENT = n.sysid
+		WHERE NOT regexp_like(M .EQPKIND,'OHT|SBZ|MBZ|LBZ')
+		GROUP BY M .EQPKIND
+		HAVING M .EQPKIND = #{eqpType}
+    </select>
+    <!--单台设备容量信息-->
+    <select id="getEQPCapacityOne" parameterType="java.lang.String" resultType="com.rlc.rlcfmbapi.modules.mes.entity.EqpDetailDTO">
+        SELECT
+        M.ID AS "id",
+        M .eqpName AS "eqpName",
+        M .EQPKIND AS "eqpType",
+        n.CAPACITY AS "currentCapacity",
+        o.AVAILABLECAPACITY AS "totalCapacity"
+        FROM
+        (
+        SELECT
+        A .sysid AS ID,
+        A . NAME AS EQPNAME,
+        b. FLOOR,
+        b.RECIPENAME,
+        c.EQPKIND
+        FROM
+        FWEQPEQUIPMENT A,
+        FABEQPEQUIPMENTEXT b,
+        FABEQPTYPEEXT c
+        WHERE
+        b. PARENT = A .sysid
+        AND c. PARENT = A .EQPTYPE
+        AND c.EQPKIND = #{eqpType}
+        ) M
+        LEFT JOIN FWEQPCURRENTSTATE n ON n.EQUIPMENTNAME = M .eqpName
+        INNER JOIN FABEQPCURRENTSTATEEXT o ON o. PARENT = n.sysid
+        WHERE M.eqpName=#{device_name}
+    </select>
+    <!--查询所有设备运行状态信息-->
+    <select id="getAllEqpRunInfoList" resultType="com.rlc.rlcfmbapi.modules.mes.entity.EqpDetailDTO">
+        SELECT M.ID AS "id",
+        M .eqpName AS "eqpName",
+        M .EQPKIND AS "eqpType",
+        o.EAPSTATE AS "eqpRunState",
+		o.EQPMODE AS "eqpControlMode",
+        o.DISPATCHINGMODE
+        FROM
+        (
+        SELECT
+        A .sysid AS ID,
+        A . NAME AS EQPNAME,
+        c.EQPKIND
+        FROM
+        FWEQPEQUIPMENT A,
+        FABEQPEQUIPMENTEXT b,
+        FABEQPTYPEEXT c
+        WHERE
+        b. PARENT = A .sysid
+        AND c. PARENT = A .EQPTYPE
+        ) M
+        LEFT JOIN FWEQPCURRENTSTATE n ON n.EQUIPMENTNAME = M .eqpName
+        INNER JOIN FABEQPCURRENTSTATEEXT o ON o. PARENT = n.sysid
+        WHERE M .EQPKIND != 'OHT' AND M .EQPKIND != 'HCX' AND M .EQPKIND != 'HCQ' AND M .EQPKIND != 'SBZ' AND M .EQPKIND != 'RGV' AND M .EQPKIND != 'ZX'
+        ORDER BY M.EQPNAME
+    </select>
+    <!--剩余加工工时-->
+    <select id="getRemainingTime"  parameterType="java.lang.String" resultType="com.rlc.rlcfmbapi.modules.mes.entity.EqpDetailDTO">
+            SELECT
+            (GREATEST((REMAININGTIME - CEIL(((select SYSDATE from dual) - TO_DATE(SUBSTR(LASTUPDATEDTIME, 1, 15), 'yyyy-mm-dd hh24-mi-ss'))* 24 * 60 * 60)), 0))  remainingTime
+            FROM FABEQPPROCESSSTATE
+            WHERE EQUIPMENTID = #{device_name}
+    </select>
+    <!--设备数量-->
+    <select id="getEqpTotalNumber" parameterType="java.lang.String" resultType="com.rlc.rlcfmbapi.modules.mes.entity.EqpDetailDTO">
+        SELECT
+        count(1) AS "totalNumber"
+        FROM
+        (
+        SELECT
+        A .sysid AS ID,
+        A . NAME AS EQPNAME,
+        b. FLOOR,
+        b.RECIPENAME,
+        c.EQPKIND
+        FROM
+        FWEQPEQUIPMENT A,
+        FABEQPEQUIPMENTEXT b,
+        FABEQPTYPEEXT c
+        WHERE
+        b. PARENT = A .sysid
+        AND c. PARENT = A .EQPTYPE
+        ) M
+        LEFT JOIN FWEQPCURRENTSTATE n ON n.EQUIPMENTNAME = M .eqpName
+        INNER JOIN FABEQPCURRENTSTATEEXT o ON o. PARENT = n.sysid
+        WHERE   M .EQPKIND = 'XQ'
+    </select>
+</mapper>

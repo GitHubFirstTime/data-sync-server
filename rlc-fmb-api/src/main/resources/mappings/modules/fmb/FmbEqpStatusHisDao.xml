@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rlc.rlcfmbapi.modules.fmb.dao.FmbEqpStatusHisDao">
+	<sql id="eqpStatusHisColumns">
+		a.id,
+		a.EQP_ID as "eqpId", 
+		a.EQP_NAME as "eqpName", 
+		a.EQP_STATUS as "eqpStatus", 
+		a.STATUS_DURATION as "statusDuration",
+		a.remarks,
+		a.create_date as "createDate",
+		a.update_date as "updateDate",
+		a.del_flag
+	</sql>
+	<sql id="eqpStatusHisJoins">
+-- 		left join sys_user b on a.create_by=b.id
+-- 		left join sys_user c on a.update_by=c.id
+		<!-- left join fmb_eqp_tag d on a.id=d.eqp_id
+		left join fmb_tag e on e.id=d.tag_id -->
+		<!-- left join fmb_eqp_group f on f.id=a.group_id
+		left join fmb_icon_image g on g.id=a.icon_id -->
+	</sql>
+	<select id="get" resultType="FmbEqpStatusHis">
+		SELECT
+		<include refid="eqpStatusHisColumns" />
+		FROM FMB_EQP_STATUS_HIS a
+		<include refid="eqpStatusHisJoins" />
+		WHERE a.id = #{id}
+	</select>
+	<insert id="insert" parameterType="java.util.Map">
+		insert into FMB_EQP_STATUS_HIS
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != '' ">
+				id,
+			</if>
+			<if test="eqpId != null" >
+        		EQP_ID,
+      		</if>
+      		<if test="eqpName != null" >
+        		EQP_NAME,
+      		</if>
+      		<if test="eqpStatus != null" >
+        		EQP_STATUS,
+      		</if>
+      		<if test="statusDuration != null" >
+        		STATUS_DURATION,
+      		</if>
+			<if test="remarks != null">
+				remarks,
+			</if>
+			<if test="createBy != null">
+				create_by,
+			</if>
+			<if test="createDate != null">
+				create_date,
+			</if>
+			<if test="updateBy != null">
+				update_by,
+			</if>
+			<if test="updateDate != null">
+				update_date,
+			</if>
+			<if test="delFlag != null">
+				del_flag,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != '' ">
+				#{id},
+			</if>
+			<if test="eqpId != null" >
+        		#{eqpId,jdbcType=VARCHAR},
+      		</if>
+      		<if test="eqpName != null" >
+        		#{eqpName,jdbcType=VARCHAR},
+      		</if>
+      		<if test="eqpStatus != null" >
+       			#{eqpStatus,jdbcType=VARCHAR},
+      		</if>
+      		<if test="statusDuration != null" >
+        		#{statusDuration},
+      		</if>
+			<if test="remarks != null">
+				#{remarks},
+			</if>
+			<if test="createBy != null">
+				#{createBy.id},
+			</if>
+			<if test="createDate != null">
+				#{createDate},
+			</if>
+			<if test="updateBy != null">
+				#{updateBy.id},
+			</if>
+			<if test="updateDate != null">
+				#{updateDate},
+			</if>
+			<if test="delFlag != null">
+				#{delFlag},
+			</if>
+		</trim>
+	</insert>
+	<update id="update" parameterType="java.util.Map">
+		update FMB_EQP_STATUS_HIS
+		<set>
+			<if test="eqpId != null" >
+        		EQP_ID = #{eqpId,jdbcType=VARCHAR},
+      		</if>
+      		<if test="eqpName != null" >
+        		EQP_NAME = #{eqpName,jdbcType=VARCHAR},
+      		</if>
+      		<if test="eqpStatus != null" >
+        		EQP_STATUS = #{eqpStatus,jdbcType=VARCHAR},
+      		</if>
+      		<if test="statusDuration != null" >
+        		STATUS_DURATION = #{statusDuration},
+      		</if>
+			<if test="remarks != null">
+				remarks = #{remarks,jdbcType=VARCHAR},
+			</if>
+			<if test="createBy != null">
+				create_by = #{createBy.id,jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+				create_date = #{createDate},
+			</if>
+			<if test="updateBy != null">
+				update_by = #{updateBy.id,jdbcType=VARCHAR},
+			</if>
+			<if test="updateDate != null">
+				update_date = #{updateDate},
+			</if>
+			<if test="delFlag != null">
+				del_flag = #{delFlag},
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+	<select id="findList" resultType="FmbEqpStatusHis">
+		select
+		<include refid="eqpStatusHisColumns" />
+		from FMB_EQP_STATUS_HIS a
+		<include refid="eqpStatusHisJoins" />
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+		<if test="modelName != null and modelName !=''">
+			and a.model_name like 
+				<if test="dbName == 'oracle'">'%'||#{modelName}||'%'</if>
+				<if test="dbName == 'mysql'">CONCAT('%', #{modelName}, '%')</if>
+		</if>
+		<if test="searchObject != null and searchObject !=''">
+			and (a.eqp_code like 
+				<if test="dbName == 'oracle'">'%'||#{searchObject}||'%'</if>
+				<if test="dbName == 'mysql'">CONCAT('%', #{searchObject}, '%')</if>
+				or a.model_name like 
+				<if test="dbName == 'oracle'">'%'||#{searchObject}||'%'</if>
+				<if test="dbName == 'mysql'">CONCAT('%', #{searchObject}, '%')</if>
+				)
+		</if>
+		<if test="takeOver != null and takeOver !=''">
+			and a.take_over = #{takeOver}
+		</if>
+		<if test="groupId != null and groupId !=''">
+			and a.group_id = #{groupId}
+		</if>
+		<if test="tagSearch != null and tagSearch !=''">
+			and 
+				<if test="dbName == 'oracle'">REGEXP_LIKE(CONCAT (CONCAT(',',eqp_tag),','),'#{tagSearch}')</if>
+				<if test="dbName == 'mysql'">CONCAT (',',eqp_tag,',') REGEXP ',(#{tagSearch}),'</if>
+			
+		</if>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date desc
+			</otherwise>
+		</choose>
+	</select>
+	<!-- 物理删除 -->
+	<update id="delete">
+		DELETE FROM FMB_EQP_STATUS_HIS
+		WHERE id = #{id}
+	</update>
+
+	<!-- 逻辑删除 -->
+	<update id="deleteByLogic">
+		UPDATE FMB_EQP_STATUS_HIS SET
+		del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="FmbEqpStatusHis"
+		statementType="STATEMENT">
+		select * from FMB_EQP_STATUS_HIS where ${propertyName} = '${value}'
+	</select>
+	<insert id="insertBatch">
+        INSERT ALL
+        <foreach collection ="list" item="eqpStatusHis" index="index">
+            INTO FMB_EQP_STATUS_HIS
+            (ID, EQP_ID, EQP_NAME, 
+      			EQP_STATUS, STATUS_DURATION, REMARKS, 
+      			 CREATE_DATE,
+      			UPDATE_DATE, DEL_FLAG)
+            VALUES
+            (#{eqpStatusHis.id,jdbcType=VARCHAR}, #{eqpStatusHis.eqpId,jdbcType=VARCHAR}, #{eqpStatusHis.eqpName,jdbcType=VARCHAR}, 
+      		#{eqpStatusHis.eqpStatus,jdbcType=VARCHAR}, #{eqpStatusHis.statusDuration,jdbcType=DECIMAL}, #{eqpStatusHis.remarks,jdbcType=VARCHAR},
+      		 #{eqpStatusHis.createDate,jdbcType=TIMESTAMP}, #{eqpStatusHis.updateDate,jdbcType=TIMESTAMP}, #{eqpStatusHis.delFlag,jdbcType=CHAR})
+        </foreach >
+        SELECT 1 FROM DUAL
+    </insert>
+	<update id="updateBatch" parameterType="java.util.List" >
+        update FMB_EQP_STATUS_HIS
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="UPDATE_DATE =case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                     <if test="i.updateDate!=null">
+                        when id=#{i.id} then #{i.updateDate}
+                     </if>
+                </foreach>
+            </trim>
+			<trim prefix="STATUS_DURATION =case" suffix="end,">
+				<foreach collection="list" item="i" index="index">
+					<if test="i.statusDuration!=null">
+						when id=#{i.id} then #{i.statusDuration}
+					</if>
+				</foreach>
+			</trim>
+        </trim>
+        where
+        <foreach collection="list" separator="or" item="i" index="index" >
+            id=#{i.id}
+        </foreach>
+    </update>
+	<select id="getNewStatusByEqp" resultType="FmbEqpStatusHis">
+		  SELECT
+		  	id,
+			EQP_ID as "eqpId",
+			EQP_NAME as "eqpName",
+			EQP_STATUS as "eqpStatus",
+			STATUS_DURATION as "statusDuration",
+			remarks,
+			create_date as "createDate",
+			update_date as "updateDate",
+			del_flag
+    		FROM (SELECT ROW_NUMBER() OVER(PARTITION BY EQP_NAME ORDER BY UPDATE_DATE DESC) rn,
+          	FMB_EQP_STATUS_HIS.* FROM FMB_EQP_STATUS_HIS)
+   			WHERE rn = 1
+	</select>
+<!-- 	<select id="getEqpByGroup">
+		select * from FMB_EQP_STATUS_HIS a 
+		where a.group_id is not null 
+		<![CDATA[and a.group_id <> '']]>
+		and a.id = #{id}
+	</select> -->
+	<!--<resultMap type="EqpTypeVO" id="eqpTypeMap">
+		<result property="eqpTypeName" column="eqpTypeName" />
+		<collection property="eqpList" column="eqpTypeName" select="getEqpByType" /> 
+	</resultMap>
+	<select id="getEqpType" resultMap="eqpTypeMap">
+		select 
+			eqp_type as "eqpTypeName"
+		from EQP_TYPE_VIEW
+	</select>
+	<select id="getEqpByType" resultType="FmbEqpStatusHis">
+    	select 
+	    	a.id,
+			a.model_name as "modelName",
+			a.eqp_code as "eqpCode"
+		from 
+			FMB_EQP_STATUS_HIS a
+		WHERE a.eqp_type = #{eqpTypeName}
+    </select>-->
+</mapper>

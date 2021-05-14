@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlc.rlcfmbapi.modules.mes.dao.CrystalBarInfoDao">
+    <!--获取设备上晶棒信息-->
+    <select id="getCrystalInfoList" parameterType="java.lang.String" resultType="com.rlc.rlcfmbapi.modules.mes.entity.CrystalBarInfoDTO" >
+        SELECT
+        lot.appId,
+        step.trackInTime,
+        step.trackInLocation,
+        lot.ORDERNUMBER ,
+        lotcuste.color as color,
+        lotcuste.TOTALLENGTH as totalLength,
+        CASE LENGTH(SUBTOTALLENGTH)-LENGTH(REGEXP_REPLACE(SUBTOTALLENGTH, ',', ''))
+	      WHEN 0 THEN '整棒'
+		  WHEN 1 THEN '双拼'
+		  WHEN 2 THEN '三拼'
+		  WHEN 3 THEN '四拼'
+		  WHEN 4 THEN '五拼'
+	      ELSE null
+          END	moldType
+        FROM
+        FWLOT lot,
+        FWWIPSTEP step ,
+        fablotcustext lotcuste
+        WHERE
+        lot.SYSID =step.LOTOBJECT
+        and lot.SYSID = lotcuste.PARENT(+)
+        AND trackinlocation = #{eqpName}
+        AND <![CDATA[rownum< 2]]>
+    </select>
+    <!--查询XQ对应缓存工位上晶棒信息-->
+    <select id="getBufferStationCrystalInfoOne" parameterType="java.lang.String" resultType="com.rlc.rlcfmbapi.modules.mes.entity.CrystalBarInfoDTO">
+        SELECT
+        lot.appId,
+        step.trackInTime,
+        step.trackInLocation,
+        lot.ORDERNUMBER ,
+        lotcuste.color as color,
+        lotcuste.TOTALLENGTH as totalLength,
+        CASE LENGTH(SUBTOTALLENGTH)-LENGTH(REGEXP_REPLACE(SUBTOTALLENGTH, ',', ''))
+	      WHEN 0 THEN '整棒'
+		  WHEN 1 THEN '双拼'
+		  WHEN 2 THEN '三拼'
+		  WHEN 3 THEN '四拼'
+		  WHEN 4 THEN '五拼'
+	      ELSE null
+          END	moldType
+        FROM
+        FWLOT lot,
+        FWWIPSTEP step ,
+        fablotcustext lotcuste
+        WHERE
+        lot.SYSID =step.LOTOBJECT
+        and lot.SYSID = lotcuste.PARENT(+)
+        AND lot.appId = (SELECT LOTID AS "appId" FROM FABEQPRUNINFO WHERE EQPID = #{eqpName})
+    </select>
+</mapper>

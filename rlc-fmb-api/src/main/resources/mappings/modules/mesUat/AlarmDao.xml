@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlc.rlcfmbapi.modules.mesUat.dao.AlarmDao">
+    <!--单条告警记录-->
+    <select id="getAlarmDetail" parameterType="java.lang.String" resultType="com.rlc.rlcfmbapi.modules.mesUat.entity.AlarmDTO">
+        SELECT
+        a.alarm_Id AS "alarmId",
+        a.TOOL_ID AS "deviceName",
+        a.ALARM_CODE AS "alarmReasonCode",
+        a.STATUS AS "alarmStatus",
+        SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) AS "deviceType",
+        CASE WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'GHK' THEN '固化库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'XQ' THEN '线切机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'TJ' THEN '脱胶机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'QX' THEN '清洗机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'ZB' THEN '粘棒机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'AOI' THEN '分选机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'YLK' THEN '原料库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'LTK' THEN '单晶库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'CPK' THEN '成品库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) in ('ZX','CM','MD' )THEN '包装机'
+        ELSE
+        null
+        END AS "deviceType_name",
+        a.SEVERITY AS "alarmLevel",
+        b.DESCRIPTION AS "alarmDescription",
+        b.SYSTEM_ID AS "alarmType",
+        to_date(TO_CHAR(ALARM_DT,'YYYY-MM-DD HH24:MI'),'YYYY-MM-DD HH24:MI') AS "alarmTime"
+        FROM ALARM a LEFT JOIN ALARM_CODE b ON a.ALARM_CODE = b.CODE
+        WHERE a.TOOL_ID = #{toolId}
+        AND a.alarm_Id = #{alarmId}
+        AND ROWNUM <![CDATA[ < ]]> 2
+    </select>
+    <!--单台设备-->
+    <select id="getAlarmInfo" resultType="com.rlc.rlcfmbapi.modules.mesUat.entity.AlarmDTO">
+        select * from (select rownum rn,a.* from
+        (SELECT
+        a.alarm_Id AS "alarmId",
+        a.TOOL_ID AS "deviceName",
+        a.ALARM_CODE AS "alarmReasonCode",
+        a.STATUS AS "alarmStatus",
+        SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) AS "deviceType",
+        CASE WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'GHK' THEN '固化库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'XQ' THEN '线切机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'TJ' THEN '脱胶机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'QX' THEN '清洗机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'ZB' THEN '粘棒机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'AOI' THEN '分选机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'YLK' THEN '原料库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'LTK' THEN '单晶库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'CPK' THEN '成品库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) in ('ZX','CM','MD' )THEN '包装机'
+        ELSE
+        null
+        END AS "deviceType_name",
+        a.SEVERITY AS "alarmLevel",
+        b.DESCRIPTION AS "alarmDescription",
+        b.SYSTEM_ID AS "alarmType",
+        to_date(TO_CHAR(ALARM_DT,'YYYY-MM-DD HH24:MI'),'YYYY-MM-DD HH24:MI') AS "alarmTime",
+		COUNT(*) OVER () total
+        FROM ALARM a LEFT JOIN ALARM_CODE b ON a.ALARM_CODE = b.CODE
+        WHERE a.TOOL_ID = #{toolId}  AND ALARM_DT <![CDATA[ > ]]> (SYSDATE - 1) AND ROWNUM <![CDATA[ <= ]]> 20
+        )a
+        where rownum <![CDATA[ <= ]]> #{page_num} * #{page_size})aa where aa.rn <![CDATA[ > ]]>(#{page_num} - 1)*#{page_size}
+    </select>
+    <!--某个车间-->
+    <select id="getAlarmInfoList" resultType="com.rlc.rlcfmbapi.modules.mesUat.entity.AlarmDTO">
+        select * from (select rownum rn,a.* from
+       (SELECT
+        a.alarm_Id AS "alarmId",
+        a.TOOL_ID AS "deviceName",
+        a.ALARM_CODE AS "alarmReasonCode",
+        a.STATUS AS "alarmStatus",
+        SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) AS "deviceType",
+        CASE WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'GHK' THEN '固化库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'XQ' THEN '线切机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'TJ' THEN '脱胶机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'QX' THEN '清洗机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'ZB' THEN '粘棒机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'AOI' THEN '分选机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'YLK' THEN '原料库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'LTK' THEN '单晶库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'CPK' THEN '成品库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) in ('ZX','CM','MD' )THEN '包装机'
+        ELSE
+        null
+        END AS "deviceType_name",
+        a.SEVERITY AS "alarmLevel",
+        b.DESCRIPTION AS "alarmDescription",
+        b.SYSTEM_ID AS "alarmType",
+        to_date(TO_CHAR(ALARM_DT,'YYYY-MM-DD HH24:MI'),'YYYY-MM-DD HH24:MI') AS "alarmTime",
+		COUNT(*) OVER () total
+        FROM ALARM a LEFT JOIN ALARM_CODE b ON a.ALARM_CODE = b.CODE
+        WHERE a.TOOL_ID LIKE CONCAT(#{device_type}, '%')  AND ALARM_DT <![CDATA[ > ]]> (SYSDATE - 1) AND ROWNUM <![CDATA[ <= ]]> 300
+        )a
+        where rownum <![CDATA[ <= ]]> #{page_num} * #{page_size})aa where aa.rn <![CDATA[ > ]]>(#{page_num} - 1)*#{page_size}
+    </select>
+    <!--历史告警记录一楼-->
+    <select id="getAlarmInfoListOneFloor" resultType="com.rlc.rlcfmbapi.modules.mesUat.entity.AlarmDTO">
+         select * from (select rownum rn,a.* from
+       (SELECT
+        a.alarm_Id AS "alarmId",
+        a.TOOL_ID AS "deviceName",
+        a.ALARM_CODE AS "alarmReasonCode",
+        a.STATUS AS "alarmStatus",
+        SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) AS "deviceType",
+        CASE WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'GHK' THEN '固化库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'XQ' THEN '线切机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'TJ' THEN '脱胶机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'QX' THEN '清洗机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'ZB' THEN '粘棒机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'AOI' THEN '分选机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'YLK' THEN '原料库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'LTK' THEN '单晶库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'CPK' THEN '成品库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) in ('ZX','CM','MD' )THEN '包装机'
+        ELSE
+        null
+        END AS "deviceType_name",
+        a.SEVERITY AS "alarmLevel",
+        b.DESCRIPTION AS "alarmDescription",
+        b.SYSTEM_ID AS "alarmType",
+        to_date(TO_CHAR(ALARM_DT,'YYYY-MM-DD HH24:MI'),'YYYY-MM-DD HH24:MI') AS "alarmTime",
+		COUNT(*) OVER () total
+        FROM ALARM a LEFT JOIN ALARM_CODE b ON a.ALARM_CODE = b.CODE
+        WHERE a.TOOL_ID not like 'CP%' AND  a.TOOL_ID not like 'Eqp%' AND  a.TOOL_ID not like 'AOI%'  AND  a.TOOL_ID not like 'QX%'
+        AND ALARM_DT <![CDATA[ > ]]> (SYSDATE - 1)
+		AND ROWNUM <![CDATA[ <= ]]> 300)a
+        where rownum <![CDATA[ <= ]]> #{page_num} * #{page_size})aa where aa.rn <![CDATA[ > ]]>(#{page_num} - 1)*#{page_size}
+    </select>
+    <!--历史告警记录二楼-->
+    <select id="getAlarmInfoListTwoFloor" resultType="com.rlc.rlcfmbapi.modules.mesUat.entity.AlarmDTO">
+        select * from (select rownum rn,a.* from
+       (SELECT
+        a.alarm_Id AS "alarmId",
+        a.TOOL_ID AS "deviceName",
+        a.ALARM_CODE AS "alarmReasonCode",
+        a.STATUS AS "alarmStatus",
+        SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) AS "deviceType",
+        CASE WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'GHK' THEN '固化库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'XQ' THEN '线切机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'TJ' THEN '脱胶机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'QX' THEN '清洗机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'ZB' THEN '粘棒机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'AOI' THEN '分选机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'YLK' THEN '原料库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'LTK' THEN '单晶库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'CPK' THEN '成品库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) in ('ZX','CM','MD' )THEN '包装机'
+        ELSE
+        null
+        END AS "deviceType_name",
+        a.SEVERITY AS "alarmLevel",
+        b.DESCRIPTION AS "alarmDescription",
+        b.SYSTEM_ID AS "alarmType",
+        to_date(TO_CHAR(ALARM_DT,'YYYY-MM-DD HH24:MI'),'YYYY-MM-DD HH24:MI') AS "alarmTime",
+		COUNT(*) OVER () total
+        FROM ALARM a LEFT JOIN ALARM_CODE b ON a.ALARM_CODE = b.CODE
+        WHERE a.TOOL_ID not like 'CP%' AND  a.TOOL_ID not like 'Eqp%' AND  a.TOOL_ID not like 'XQ%'  AND  a.TOOL_ID not like 'TJ%'  AND  a.TOOL_ID not like 'ZB%'
+				 AND  a.TOOL_ID not like 'ZZ%'  AND  a.TOOL_ID not like 'GHK%' AND ALARM_DT <![CDATA[ > ]]> (SYSDATE - 1)
+				AND ROWNUM <![CDATA[ <= ]]> 300)a
+        where rownum <![CDATA[ <= ]]> #{page_num} * #{page_size})aa where aa.rn <![CDATA[ > ]]>(#{page_num} - 1)*#{page_size}
+    </select>
+    <!--全场景-->
+    <select id="getAlarmInfoListAll" resultType="com.rlc.rlcfmbapi.modules.mesUat.entity.AlarmDTO">
+       select * from (select rownum rn,a.* from
+       (SELECT
+        a.alarm_Id AS "alarmId",
+        a.TOOL_ID AS "deviceName",
+        a.ALARM_CODE AS "alarmReasonCode",
+        a.STATUS AS "alarmStatus",
+        SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) AS "deviceType",
+        CASE WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'GHK' THEN '固化库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'XQ' THEN '线切机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'TJ' THEN '脱胶机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'QX' THEN '清洗机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'ZB' THEN '粘棒机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'AOI' THEN '分选机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'YLK' THEN '原料库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'LTK' THEN '单晶库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'CPK' THEN '成品库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) in ('ZX','CM','MD' )THEN '包装机'
+        ELSE
+        null
+        END AS "deviceType_name",
+        a.SEVERITY AS "alarmLevel",
+        b.DESCRIPTION AS "alarmDescription",
+        b.SYSTEM_ID AS "alarmType",
+        to_date(TO_CHAR(ALARM_DT,'YYYY-MM-DD HH24:MI'),'YYYY-MM-DD HH24:MI') AS "alarmTime"
+        FROM ALARM a LEFT JOIN ALARM_CODE b ON a.ALARM_CODE = b.CODE
+        WHERE a.TOOL_ID not like 'CP%')a
+        where rownum <![CDATA[ <= ]]> #{page_num} * #{page_size})aa where aa.rn <![CDATA[ > ]]>(#{page_num} - 1)*#{page_size}
+    </select>
+    <!--查询未处理的告警信息-->
+    <select id="getAlarmOpenList" resultType="com.rlc.rlcfmbapi.modules.mesUat.entity.AlarmDTO">
+       select "alarmId","deviceName","alarmReasonCode","alarmStatus","deviceType","deviceType_name","alarmLevel","alarmDescription","alarmType","alarmTime"
+       from (
+       select "alarmId","deviceName","alarmReasonCode","alarmStatus","deviceType","deviceType_name","alarmLevel","alarmDescription","alarmType","alarmTime",row_number() over (partition by "deviceName" order by rownum) row_no from (
+		SELECT
+        a.alarm_Id AS "alarmId",
+        a.TOOL_ID AS "deviceName",
+        a.ALARM_CODE AS "alarmReasonCode",
+        a.STATUS AS "alarmStatus",
+        SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) AS "deviceType",
+        CASE WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'GHK' THEN '固化库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'XQ' THEN '线切机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'TJ' THEN '脱胶机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'QX' THEN '清洗机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'ZB' THEN '粘棒机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'AOI' THEN '分选机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'YLK' THEN '原料库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'LTK' THEN '单晶库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'CPK' THEN '成品库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) in ('ZX','CM','MD' )THEN '包装机'
+        ELSE
+        null
+        END AS "deviceType_name",
+        a.SEVERITY AS "alarmLevel",
+        b.DESCRIPTION AS "alarmDescription",
+        b.SYSTEM_ID AS "alarmType",
+        to_date(TO_CHAR(ALARM_DT,'YYYY-MM-DD HH24:MI'),'YYYY-MM-DD HH24:MI') AS "alarmTime"
+        FROM ALARM a LEFT JOIN ALARM_CODE b ON a.ALARM_CODE = b.CODE
+        WHERE a.TOOL_ID not like 'CP%' AND  a.TOOL_ID not like 'Eqp%'
+		AND STATUS = 'Open'
+        ORDER BY  ALARM_DT DESC
+			 )
+        ) where row_no = 1
+    </select>
+    <!--1楼-->
+    <select id="getAlarmOpenOneFloor" resultType="com.rlc.rlcfmbapi.modules.mesUat.entity.AlarmDTO">
+        select "alarmId","deviceName","alarmReasonCode","alarmStatus","deviceType","deviceType_name","alarmLevel","alarmDescription","alarmType","alarmTime",
+				 COUNT(*) OVER () total
+       from (
+       select "alarmId","deviceName","alarmReasonCode","alarmStatus","deviceType","deviceType_name","alarmLevel","alarmDescription","alarmType","alarmTime",row_number() over (partition by "deviceName" order by rownum) row_no from (
+
+			 SELECT
+        a.alarm_Id AS "alarmId",
+        a.TOOL_ID AS "deviceName",
+        a.ALARM_CODE AS "alarmReasonCode",
+        a.STATUS AS "alarmStatus",
+        SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) AS "deviceType",
+        CASE WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'GHK' THEN '固化库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'XQ' THEN '线切机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'TJ' THEN '脱胶机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'QX' THEN '清洗机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'ZB' THEN '粘棒机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'AOI' THEN '分选机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'YLK' THEN '原料库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'LTK' THEN '单晶库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'CPK' THEN '成品库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) in ('ZX','CM','MD' )THEN '包装机'
+        ELSE
+        null
+        END AS "deviceType_name",
+        a.SEVERITY AS "alarmLevel",
+        b.DESCRIPTION AS "alarmDescription",
+        b.SYSTEM_ID AS "alarmType",
+        to_date(TO_CHAR(ALARM_DT,'YYYY-MM-DD HH24:MI'),'YYYY-MM-DD HH24:MI') AS "alarmTime",
+        COUNT(*) OVER () total
+        FROM ALARM a LEFT JOIN ALARM_CODE b ON a.ALARM_CODE = b.CODE
+        WHERE a.TOOL_ID not like 'CP%' AND  a.TOOL_ID not like 'Eqp%' AND  a.TOOL_ID not like 'AOI%'  AND  a.TOOL_ID not like 'QX%'
+		AND STATUS = 'Open'
+        ORDER BY  ALARM_DT DESC
+			 )
+        ) where row_no = 1
+    </select>
+    <!--2楼-->
+    <select id="getAlarmOpenTwoFloor" resultType="com.rlc.rlcfmbapi.modules.mesUat.entity.AlarmDTO">
+        select "alarmId","deviceName","alarmReasonCode","alarmStatus","deviceType","deviceType_name","alarmLevel","alarmDescription","alarmType","alarmTime",
+				 COUNT(*) OVER () total
+       from (
+       select "alarmId","deviceName","alarmReasonCode","alarmStatus","deviceType","deviceType_name","alarmLevel","alarmDescription","alarmType","alarmTime",row_number() over (partition by "deviceName" order by rownum) row_no from (
+
+			 SELECT
+        a.alarm_Id AS "alarmId",
+        a.TOOL_ID AS "deviceName",
+        a.ALARM_CODE AS "alarmReasonCode",
+        a.STATUS AS "alarmStatus",
+        SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) AS "deviceType",
+        CASE WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'GHK' THEN '固化库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'XQ' THEN '线切机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'TJ' THEN '脱胶机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'QX' THEN '清洗机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'ZB' THEN '粘棒机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'AOI' THEN '分选机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'YLK' THEN '原料库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'LTK' THEN '单晶库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'CPK' THEN '成品库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) in ('ZX','CM','MD' )THEN '包装机'
+        ELSE
+        null
+        END AS "deviceType_name",
+        a.SEVERITY AS "alarmLevel",
+        b.DESCRIPTION AS "alarmDescription",
+        b.SYSTEM_ID AS "alarmType",
+        to_date(TO_CHAR(ALARM_DT,'YYYY-MM-DD HH24:MI'),'YYYY-MM-DD HH24:MI') AS "alarmTime",
+        COUNT(*) OVER () total
+        FROM ALARM a LEFT JOIN ALARM_CODE b ON a.ALARM_CODE = b.CODE
+        WHERE a.TOOL_ID not like 'CP%' AND  a.TOOL_ID not like 'Eqp%' AND  a.TOOL_ID not like 'XQ%'  AND  a.TOOL_ID not like 'TJ%'  AND  a.TOOL_ID not like 'ZB%'
+				 AND  a.TOOL_ID not like 'ZZ%'  AND  a.TOOL_ID not like 'GHK%'
+		AND STATUS = 'Open'
+        ORDER BY  ALARM_DT DESC
+			 )
+        ) where row_no = 1
+    </select>
+    <!--单个车间-->
+    <select id="getAlarmOpenOneTypeEqp" resultType="com.rlc.rlcfmbapi.modules.mesUat.entity.AlarmDTO">
+         select "alarmId","deviceName","alarmReasonCode","alarmStatus","deviceType","deviceType_name","alarmLevel","alarmDescription","alarmType","alarmTime",COUNT(*) OVER () total
+       from (
+       select "alarmId","deviceName","alarmReasonCode","alarmStatus","deviceType","deviceType_name","alarmLevel","alarmDescription","alarmType","alarmTime",row_number() over (partition by "deviceName" order by rownum) row_no from (
+
+			 SELECT
+        a.alarm_Id AS "alarmId",
+        a.TOOL_ID AS "deviceName",
+        a.ALARM_CODE AS "alarmReasonCode",
+        a.STATUS AS "alarmStatus",
+        SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) AS "deviceType",
+        CASE WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'GHK' THEN '固化库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'XQ' THEN '线切机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'TJ' THEN '脱胶机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'QX' THEN '清洗机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'ZB' THEN '粘棒机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'AOI' THEN '分选机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'YLK' THEN '原料库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'LTK' THEN '单晶库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'CPK' THEN '成品库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) in ('ZX','CM','MD' )THEN '包装机'
+        ELSE
+        null
+        END AS "deviceType_name",
+        a.SEVERITY AS "alarmLevel",
+        b.DESCRIPTION AS "alarmDescription",
+        b.SYSTEM_ID AS "alarmType",
+        to_date(TO_CHAR(ALARM_DT,'YYYY-MM-DD HH24:MI'),'YYYY-MM-DD HH24:MI') AS "alarmTime"
+        FROM ALARM a LEFT JOIN ALARM_CODE b ON a.ALARM_CODE = b.CODE
+        WHERE a.TOOL_ID LIKE CONCAT(#{device_type}, '%')
+		AND STATUS = 'Open'
+        ORDER BY  ALARM_DT DESC
+			 )
+        ) where row_no = 1
+    </select>
+    <!--单个设备-->
+    <select id="getAlarmOpenOneEqp" resultType="com.rlc.rlcfmbapi.modules.mesUat.entity.AlarmDTO">
+        SELECT
+        a.alarm_Id AS "alarmId",
+        a.TOOL_ID AS "deviceName",
+        a.ALARM_CODE AS "alarmReasonCode",
+        a.STATUS AS "alarmStatus",
+        SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) AS "deviceType",
+        CASE WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'GHK' THEN '固化库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'XQ' THEN '线切机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'TJ' THEN '脱胶机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'QX' THEN '清洗机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'ZB' THEN '粘棒机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'AOI' THEN '分选机'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'YLK' THEN '原料库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'LTK' THEN '单晶库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) = 'CPK' THEN '成品库'
+        WHEN SUBSTR(a.TOOL_ID, 0, INSTR(a.TOOL_ID, '-')-1) in ('ZX','CM','MD' )THEN '包装机'
+        ELSE
+        null
+        END AS "deviceType_name",
+        a.SEVERITY AS "alarmLevel",
+        b.DESCRIPTION AS "alarmDescription",
+        b.SYSTEM_ID AS "alarmType",
+        to_date(TO_CHAR(ALARM_DT,'YYYY-MM-DD HH24:MI'),'YYYY-MM-DD HH24:MI') AS "alarmTime",
+        COUNT(*) OVER () total
+        FROM ALARM a LEFT JOIN ALARM_CODE b ON a.ALARM_CODE = b.CODE
+        WHERE a.TOOL_ID = #{device_name}
+		AND STATUS = 'Open'
+        AND rownum <![CDATA[ <= ]]> 1
+    </select>
+</mapper>

@@ -13,13 +13,14 @@ import org.springframework.stereotype.Component;
  * @date 2021/4/23 21:42
  */
 //@PropertySource(value = "classpath:application-${spring.profiles.active}.yml",encoding = "utf-8",factory = YmlPropertySourceFactory.class)
-@ConfigurationProperties(prefix = "spring.datasource.cmdbdb")
+//@ConfigurationProperties(prefix = "spring.datasource.cmdbdb")
 @Data
 public class DBConfig_CMDB {
-    private String driverClassName;
     private String url;
     private String username;
     private String password;
+    private String driverClassName;
+    //以下为数据源连接的拓展配置属性包含连接池等信息
     private int initialSize;
     private int minPoolSize;
     private int maxPoolSize;
@@ -32,6 +33,5 @@ public class DBConfig_CMDB {
     private int maxActive;
     private int maxWait;
     private Boolean testOnBorrow = false;
-
     private String testQuery = "select 1";
 }

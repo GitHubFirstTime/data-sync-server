@@ -16,7 +16,7 @@ import javax.sql.DataSource;
  * @description: quartz 数据源配置
  * @date 2021/5/7 20:31
  */
-@Configuration
+//@Configuration
 public class QuartzDataSourceConfig {
     /**
      * 数据源配置的前缀，必须与application-{profile}.yml中配置的对应数据源的前缀一致
@@ -27,11 +27,11 @@ public class QuartzDataSourceConfig {
     /**
      * @QuartzDataSource 注解则是配置Quartz独立数据源的配置
      */
-    @Bean
-    @QuartzDataSource
-    @ConfigurationProperties(prefix = QUARTZ_DATASOURCE_PREFIX)
-    public DataSource quartzDataSource(){
-//        return DataSourceBuilder.create().build();
-        return new DruidDataSource();
-    }
+//    @Bean
+//    @QuartzDataSource
+//    @ConfigurationProperties(prefix = QUARTZ_DATASOURCE_PREFIX)
+//    public DataSource quartzDataSource(){
+////        return DataSourceBuilder.create().build();
+//        return new DruidDataSource();
+//    }
 }

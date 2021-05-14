@@ -19,12 +19,13 @@
         where
         rnum &gt;= #{start}
     </select>-->
-    <select id="findList" resultType="com.rlc.rlccmdbapi.modules.fmb.entity.Log">
+    <select id="findList" resultType="FmbLog">
         SELECT
         a.id,
         a.title
         FROM sys_log a
-        WHERE a.create_date BETWEEN #{beginDate} AND #{endDate}
+        WHERE
+        1=1
         <if test="title != null and title != ''">
             AND a.title LIKE
             <if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
@@ -41,4 +42,15 @@
         </if>
         ORDER BY a.create_date DESC
     </select>
+    <insert id="insert">
+		INSERT INTO sys_log(
+			id,
+			type,
+			title
+		) VALUES (
+			#{id},
+			#{type},
+			#{title}
+		)
+	</insert>
 </mapper>

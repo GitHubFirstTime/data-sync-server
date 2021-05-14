@@ -49,7 +49,7 @@ public abstract class CrudService<D extends CrudDao<T>, T extends DataEntity<T>>
 	 * @param entity
 	 * @return
 	 */
-	public List<T> findList(T entity) throws Exception{
+	public List<T> findList(T entity){
 		return dao.findList(entity);
 	}
 	

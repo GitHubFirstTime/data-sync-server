@@ -1,0 +1,1215 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlc.rlcfmbapi.modules.report.dao.EqpWorkingRateDao">
+    <!--线切今日工时利用率-->
+    <select id="getXQWorkingRateDaily" resultType="com.rlc.rlcfmbapi.modules.report.entity.EqpWorkingRateDTO">
+      SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100     fpyYc,
+					 '今日' dayTime,
+					 '3' sort
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+      BETWEEN trunc(sysdate-8/24)+8/24 AND SYSDATE
+			AND AOI_EQPNAME like 'AOI-A1-0%'
+      UNION ALL
+      SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+					 '昨日夜班' dayTime,
+					 '2' sort
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+      BETWEEN trunc(sysdate-8/24)-1+20/24  AND trunc(sysdate-8/24)+8/24
+			AND AOI_EQPNAME like 'AOI-A1-0%'
+      UNION ALL
+      SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+					 '昨日白班' dayTime,
+					 '1' sort
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+      BETWEEN trunc(sysdate-8/24)-1+8/24  AND trunc(sysdate-8/24)-1+20/24
+			AND AOI_EQPNAME like 'AOI-A1-0%'
+    </select>
+    <!--线切每周工时利用率-->
+    <select id="getXQWorkingRateWeekly" resultType="com.rlc.rlcfmbapi.modules.report.entity.EqpWorkingRateDTO">
+        SELECT ROWNUM AS "sort",fpyYc,dayTime FROM
+      (
+      SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+					 '星期一' dayTime
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+			BETWEEN trunc( SYSDATE, 'd' ) + 1+8 / 24 AND trunc( SYSDATE, 'd' ) + 2+8 / 24
+			AND AOI_EQPNAME like 'AOI-A1-0%'
+			UNION ALL
+      SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+					 '星期二' dayTime
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+			BETWEEN trunc( SYSDATE, 'd' ) + 2 + 8 / 24 AND trunc( SYSDATE, 'd' ) + 3 + 8 / 24
+			AND AOI_EQPNAME like 'AOI-A1-0%'
+			UNION ALL
+      SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+					 '星期三' dayTime
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+			BETWEEN trunc( SYSDATE, 'd' ) + 3 + 8 / 24 AND trunc( SYSDATE, 'd' ) + 4 + 8 / 24
+			AND AOI_EQPNAME like 'AOI-A1-0%'
+			UNION ALL
+      SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+					 '星期四' dayTime
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+			BETWEEN trunc( SYSDATE, 'd' ) + 4 + 8 / 24 AND trunc( SYSDATE, 'd' ) + 5 + 8 / 24
+			AND AOI_EQPNAME like 'AOI-A1-0%'
+			UNION ALL
+      SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+					 '星期五' dayTime
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+			BETWEEN trunc( SYSDATE, 'd' ) + 5 + 8 / 24 AND trunc( SYSDATE, 'd' ) + 6 + 8/ 24
+			AND AOI_EQPNAME like 'AOI-A1-0%'
+			UNION ALL
+      SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+					 '星期六' dayTime
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+			BETWEEN trunc( SYSDATE, 'd' ) + 6+8 / 24 AND trunc( SYSDATE, 'd' ) + 7+8 / 24
+			AND AOI_EQPNAME like 'AOI-A1-0%'
+			UNION ALL
+      SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+					 '星期日' dayTime
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+			BETWEEN trunc( SYSDATE, 'd' ) + 7+8 / 24 AND trunc( SYSDATE, 'd' ) + 8+8 / 24
+			AND AOI_EQPNAME like 'AOI-A1-0%'
+			)
+    </select>
+    <!--线切本月工时利用率-->
+    <select id="getXQWorkingRateMonthly" resultType="com.rlc.rlcfmbapi.modules.report.entity.EqpWorkingRateDTO">
+        SELECT ROWNUM AS "sort",fpyYc,dayTime FROM
+        (SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+          to_char(AOI_JOBOUT_TIME,'W') dayTime
+        FROM  REP_WAFER_INSPECTION_REALTIME
+        WHERE AOI_JOBOUT_TIME >= trunc( SYSDATE, 'mm' )
+				AND AOI_EQPNAME like 'AOI-A1-0%'
+        group by to_char(AOI_JOBOUT_TIME,'W')
+        ORDER BY dayTime
+        )
+    </select>
+
+    <!--脱胶今日工时利用率-->
+    <select id="getTJWorkingRateDaily" resultType="com.rlc.rlcfmbapi.modules.report.entity.EqpWorkingRateDTO">
+
+SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100     fpyYc,
+					 '今日' dayTime,
+					 '3' sort
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+      BETWEEN trunc(sysdate-8/24)+8/24 AND SYSDATE
+			AND AOI_EQPNAME like 'AOI-A1-1%'
+      UNION ALL
+      SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+					 '昨日夜班' dayTime,
+					 '2' sort
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+      BETWEEN trunc(sysdate-8/24)-1+20/24  AND trunc(sysdate-8/24)+8/24
+			AND AOI_EQPNAME like 'AOI-A1-1%'
+      UNION ALL
+      SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+					 '昨日白班' dayTime,
+					 '1' sort
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+      BETWEEN trunc(sysdate-8/24)-1+8/24  AND trunc(sysdate-8/24)-1+20/24
+			AND AOI_EQPNAME like 'AOI-A1-1%'
+    </select>
+    <!--脱胶每周工时利用率-->
+    <select id="getTJWorkingRateWeekly"  resultType="com.rlc.rlcfmbapi.modules.report.entity.EqpWorkingRateDTO" >
+        SELECT ROWNUM AS "sort",fpyYc,dayTime FROM
+      (
+      SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+					 '星期一' dayTime
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+			BETWEEN trunc( SYSDATE, 'd' ) + 1+8 / 24 AND trunc( SYSDATE, 'd' ) + 2+8 / 24
+			AND AOI_EQPNAME like 'AOI-A1-1%'
+			UNION ALL
+      SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+					 '星期二' dayTime
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+			BETWEEN trunc( SYSDATE, 'd' ) + 2 + 8 / 24 AND trunc( SYSDATE, 'd' ) + 3 + 8 / 24
+			AND AOI_EQPNAME like 'AOI-A1-1%'
+			UNION ALL
+      SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+					 '星期三' dayTime
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+			BETWEEN trunc( SYSDATE, 'd' ) + 3 + 8 / 24 AND trunc( SYSDATE, 'd' ) + 4 + 8 / 24
+			AND AOI_EQPNAME like 'AOI-A1-1%'
+			UNION ALL
+      SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+					 '星期四' dayTime
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+			BETWEEN trunc( SYSDATE, 'd' ) + 4 + 8 / 24 AND trunc( SYSDATE, 'd' ) + 5 + 8 / 24
+			AND AOI_EQPNAME like 'AOI-A1-1%'
+			UNION ALL
+      SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+					 '星期五' dayTime
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+			BETWEEN trunc( SYSDATE, 'd' ) + 5 + 8 / 24 AND trunc( SYSDATE, 'd' ) + 6 + 8/ 24
+			AND AOI_EQPNAME like 'AOI-A1-1%'
+			UNION ALL
+      SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+					 '星期六' dayTime
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+			BETWEEN trunc( SYSDATE, 'd' ) + 6+8 / 24 AND trunc( SYSDATE, 'd' ) + 7+8 / 24
+			AND AOI_EQPNAME like 'AOI-A1-1%'
+			UNION ALL
+      SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+					 '星期日' dayTime
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+			BETWEEN trunc( SYSDATE, 'd' ) + 7+8 / 24 AND trunc( SYSDATE, 'd' ) + 8+8 / 24
+			AND AOI_EQPNAME like 'AOI-A1-1%'
+			)
+    </select>
+    <!--脱胶本月工时利用率-->
+    <select id="getTJWorkingRateMonthly" resultType="com.rlc.rlcfmbapi.modules.report.entity.EqpWorkingRateDTO">
+        SELECT ROWNUM AS "sort",fpyYc,dayTime FROM
+        (SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+          to_char(AOI_JOBOUT_TIME,'W') dayTime
+        FROM  REP_WAFER_INSPECTION_REALTIME
+        WHERE AOI_JOBOUT_TIME >= trunc( SYSDATE, 'mm' )
+				AND AOI_EQPNAME like 'AOI-A1-1%'
+        group by to_char(AOI_JOBOUT_TIME,'W')
+        ORDER BY dayTime
+        )
+    </select>
+
+    <!--清洗今日工时利用率-->
+    <select id="getQXWorkingRateDaily" resultType="com.rlc.rlcfmbapi.modules.report.entity.EqpWorkingRateDTO">
+        SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100     fpyYc,
+					 '今日' dayTime,
+					 '3' sort
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+      BETWEEN trunc(sysdate-8/24)+8/24 AND SYSDATE
+			AND AOI_EQPNAME like 'AOI-B1-0%'
+      UNION ALL
+      SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+					 '昨日夜班' dayTime,
+					 '2' sort
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+      BETWEEN trunc(sysdate-8/24)-1+20/24  AND trunc(sysdate-8/24)+8/24
+			AND AOI_EQPNAME like 'AOI-B1-0%'
+      UNION ALL
+      SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+					 '昨日白班' dayTime,
+					 '1' sort
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+      BETWEEN trunc(sysdate-8/24)-1+8/24  AND trunc(sysdate-8/24)-1+20/24
+			AND AOI_EQPNAME like 'AOI-B1-0%'
+    </select>
+    <!--清洗每周工时利用率-->
+    <select id="getQXWorkingRateWeekly" resultType="com.rlc.rlcfmbapi.modules.report.entity.EqpWorkingRateDTO">
+        SELECT ROWNUM AS "sort",fpyYc,dayTime FROM
+      (
+      SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+					 '星期一' dayTime
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+			BETWEEN trunc( SYSDATE, 'd' ) + 1+8 / 24 AND trunc( SYSDATE, 'd' ) + 2+8 / 24
+			AND AOI_EQPNAME like 'AOI-B1-0%'
+			UNION ALL
+      SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+					 '星期二' dayTime
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+			BETWEEN trunc( SYSDATE, 'd' ) + 2 + 8 / 24 AND trunc( SYSDATE, 'd' ) + 3 + 8 / 24
+			AND AOI_EQPNAME like 'AOI-B1-0%'
+			UNION ALL
+      SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+					 '星期三' dayTime
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+			BETWEEN trunc( SYSDATE, 'd' ) + 3 + 8 / 24 AND trunc( SYSDATE, 'd' ) + 4 + 8 / 24
+			AND AOI_EQPNAME like 'AOI-B1-0%'
+			UNION ALL
+      SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+					 '星期四' dayTime
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+			BETWEEN trunc( SYSDATE, 'd' ) + 4 + 8 / 24 AND trunc( SYSDATE, 'd' ) + 5 + 8 / 24
+			AND AOI_EQPNAME like 'AOI-B1-0%'
+			UNION ALL
+      SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+					 '星期五' dayTime
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+			BETWEEN trunc( SYSDATE, 'd' ) + 5 + 8 / 24 AND trunc( SYSDATE, 'd' ) + 6 + 8/ 24
+			AND AOI_EQPNAME like 'AOI-B1-0%'
+			UNION ALL
+      SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+					 '星期六' dayTime
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+			BETWEEN trunc( SYSDATE, 'd' ) + 6+8 / 24 AND trunc( SYSDATE, 'd' ) + 7+8 / 24
+			AND AOI_EQPNAME like 'AOI-B1-0%'
+			UNION ALL
+      SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+					 '星期日' dayTime
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+			BETWEEN trunc( SYSDATE, 'd' ) + 7+8 / 24 AND trunc( SYSDATE, 'd' ) + 8+8 / 24
+			AND AOI_EQPNAME like 'AOI-B1-0%'
+			)
+    </select>
+    <!--清洗本月工时利用率-->
+    <select id="getQXWorkingRateMonthly" resultType="com.rlc.rlcfmbapi.modules.report.entity.EqpWorkingRateDTO">
+        SELECT ROWNUM AS "sort",fpyYc,dayTime FROM
+        (SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+          to_char(AOI_JOBOUT_TIME,'W') dayTime
+        FROM  REP_WAFER_INSPECTION_REALTIME
+        WHERE AOI_JOBOUT_TIME >= trunc( SYSDATE, 'mm' )
+				AND AOI_EQPNAME like 'AOI-B1-0%'
+        group by to_char(AOI_JOBOUT_TIME,'W')
+        ORDER BY dayTime
+        )
+    </select>
+
+    <!--分选今日工时利用率-->
+    <select id="getFXWorkingRateDaily" resultType="com.rlc.rlcfmbapi.modules.report.entity.EqpWorkingRateDTO">
+        SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100     fpyYc,
+					 '今日' dayTime,
+					 '3' sort
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+      BETWEEN trunc(sysdate-8/24)+8/24 AND SYSDATE
+			AND AOI_EQPNAME like 'AOI-B1-1%'
+      UNION ALL
+      SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+					 '昨日夜班' dayTime,
+					 '2' sort
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+      BETWEEN trunc(sysdate-8/24)-1+20/24  AND trunc(sysdate-8/24)+8/24
+			AND AOI_EQPNAME like 'AOI-B1-1%'
+      UNION ALL
+      SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+					 '昨日白班' dayTime,
+					 '1' sort
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+      BETWEEN trunc(sysdate-8/24)-1+8/24  AND trunc(sysdate-8/24)-1+20/24
+			AND AOI_EQPNAME like 'AOI-B1-1%'
+    </select>
+    <!--分选每周工时利用率-->
+    <select id="getFXWorkingRateWeekly" resultType="com.rlc.rlcfmbapi.modules.report.entity.EqpWorkingRateDTO">
+        SELECT ROWNUM AS "sort",fpyYc,dayTime FROM
+      (
+      SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+					 '星期一' dayTime
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+			BETWEEN trunc( SYSDATE, 'd' ) + 1+8 / 24 AND trunc( SYSDATE, 'd' ) + 2+8 / 24
+			AND AOI_EQPNAME like 'AOI-B1-1%'
+			UNION ALL
+      SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+					 '星期二' dayTime
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+			BETWEEN trunc( SYSDATE, 'd' ) + 2 + 8 / 24 AND trunc( SYSDATE, 'd' ) + 3 + 8 / 24
+			AND AOI_EQPNAME like 'AOI-B1-1%'
+			UNION ALL
+      SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+					 '星期三' dayTime
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+			BETWEEN trunc( SYSDATE, 'd' ) + 3 + 8 / 24 AND trunc( SYSDATE, 'd' ) + 4 + 8 / 24
+			AND AOI_EQPNAME like 'AOI-B1-1%'
+			UNION ALL
+      SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+					 '星期四' dayTime
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+			BETWEEN trunc( SYSDATE, 'd' ) + 4 + 8 / 24 AND trunc( SYSDATE, 'd' ) + 5 + 8 / 24
+			AND AOI_EQPNAME like 'AOI-B1-1%'
+			UNION ALL
+      SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+					 '星期五' dayTime
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+			BETWEEN trunc( SYSDATE, 'd' ) + 5 + 8 / 24 AND trunc( SYSDATE, 'd' ) + 6 + 8/ 24
+			AND AOI_EQPNAME like 'AOI-B1-1%'
+			UNION ALL
+      SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+					 '星期六' dayTime
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+			BETWEEN trunc( SYSDATE, 'd' ) + 6+8 / 24 AND trunc( SYSDATE, 'd' ) + 7+8 / 24
+			AND AOI_EQPNAME like 'AOI-B1-1%'
+			UNION ALL
+      SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+					 '星期日' dayTime
+      FROM  REP_WAFER_INSPECTION_REALTIME
+      WHERE AOI_JOBOUT_TIME
+			BETWEEN trunc( SYSDATE, 'd' ) + 7+8 / 24 AND trunc( SYSDATE, 'd' ) + 8+8 / 24
+			AND AOI_EQPNAME like 'AOI-B1-1%'
+			)
+    </select>
+    <!--分选本月工时利用率-->
+    <select id="getFXWorkingRateMonthly" resultType="com.rlc.rlcfmbapi.modules.report.entity.EqpWorkingRateDTO">
+        SELECT ROWNUM AS "sort",fpyYc,dayTime FROM
+        (SELECT ROUND(
+           (  (  NVL (SUM (AOIM_FIELD35), 0)
+               + NVL (SUM (AOIM_FIELD32), 0)
+               + NVL (SUM (AOIM_FIELD34), 0)
+               + NVL (SUM (AOIM_FIELD33), 0)
+               + NVL (SUM (AOIM_FIELD47), 0)
+               + NVL (SUM (AOIM_FIELD15), 0)
+               + NVL (SUM (AOI_FIELD11), 0)
+               + NVL (SUM (AOI_FIELD04), 0)
+               + NVL (SUM (AOIM_FIELD41), 0)
+               + NVL (SUM (AOIM_FIELD42), 0)
+               + NVL (SUM (AOIM_FIELD43), 0)
+               + NVL (SUM (AOIM_FIELD45), 0)
+               + NVL (SUM (AOIM_FIELD44), 0)
+               + NVL (SUM (AOIM_FIELD25), 0)
+               + NVL (SUM (AOIM_FIELD20), 0)
+               + NVL (SUM (AOI_FIELD08), 0)
+               + NVL (SUM (AOIM_FIELD26), 0))
+            / SUM (XQ_FIELD09)),
+           4)*100                              fpyYc,
+          to_char(AOI_JOBOUT_TIME,'W') dayTime
+        FROM  REP_WAFER_INSPECTION_REALTIME
+        WHERE AOI_JOBOUT_TIME >= trunc( SYSDATE, 'mm' )
+				AND AOI_EQPNAME like 'AOI-B1-1%'
+        group by to_char(AOI_JOBOUT_TIME,'W')
+        ORDER BY dayTime
+        )
+    </select>
+
+</mapper>
