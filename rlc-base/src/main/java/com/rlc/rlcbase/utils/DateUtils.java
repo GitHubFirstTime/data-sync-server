@@ -5,6 +5,7 @@ package com.rlc.rlcbase.utils;
 
 import org.apache.commons.lang3.time.DateFormatUtils;
 
+import java.lang.management.ManagementFactory;
 import java.text.ParseException;
 import java.util.Date;
 
@@ -13,12 +14,28 @@ import java.util.Date;
  *
  */
 public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
-	
+	public static String YYYY = "yyyy";
+
+	public static String YYYY_MM = "yyyy-MM";
+
+	public static String YYYY_MM_DD = "yyyy-MM-dd";
+
+	public static String YYYYMMDDHHMMSS = "yyyyMMddHHmmss";
+
+	public static String YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
 	private static String[] parsePatterns = {
 		"yyyy-MM-dd", "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "yyyy-MM", 
 		"yyyy/MM/dd", "yyyy/MM/dd HH:mm:ss", "yyyy/MM/dd HH:mm", "yyyy/MM",
 		"yyyy.MM.dd", "yyyy.MM.dd HH:mm:ss", "yyyy.MM.dd HH:mm", "yyyy.MM"};
-
+	/**
+	 * 获取当前Date型日期
+	 *
+	 * @return Date() 当前日期
+	 */
+	public static Date getNowDate()
+	{
+		return new Date();
+	}
 	/**
 	 * 得到当前日期字符串 格式（yyyy-MM-dd）
 	 */
@@ -168,19 +185,7 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 		return (day>0?day+"天":"")+(hour>0?hour+"小时":"")+min+"分钟";
     }
 	
-	/**
-	 * 获取两个日期之间的天数
-	 * 
-	 * @param before
-	 * @param after
-	 * @return
-	 */
-	public static double getDistanceOfTwoDate(Date before, Date after) {
-		long beforeTime = before.getTime();
-		long afterTime = after.getTime();
-		return (afterTime - beforeTime) / (1000 * 60 * 60 * 24);
-	}
-	
+
 	/**
 	 * 倒计时
 	 * @param startDate
@@ -200,7 +205,14 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 		String[] countDownArr = {day.toString(),hour>9?hour.toString():"0"+hour,minutes>9?minutes.toString():"0"+minutes,seconds>9?seconds.toString():"0"+seconds,};
 		return countDownArr;
 	}
-	
+	/**
+	 * 获取服务器启动时间
+	 */
+	public static Date getServerStartDate()
+	{
+		long time = ManagementFactory.getRuntimeMXBean().getStartTime();
+		return new Date(time);
+	}
 	/**
 	 * @param args
 	 * @throws ParseException
@@ -212,6 +224,39 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 //		System.out.println(time/(24*60*60*1000));
 	}
 
+	/**
+	 * 计算两个时间差 天-小时-分钟
+	 */
+	public static String getDatePoor(Date endDate, Date nowDate)
+	{
+		long nd = 1000 * 24 * 60 * 60;
+		long nh = 1000 * 60 * 60;
+		long nm = 1000 * 60;
+		// long ns = 1000;
+		// 获得两个时间的毫秒时间差异
+		long diff = endDate.getTime() - nowDate.getTime();
+		// 计算差多少天
+		long day = diff / nd;
+		// 计算差多少小时
+		long hour = diff % nd / nh;
+		// 计算差多少分钟
+		long min = diff % nd % nh / nm;
+		// 计算差多少秒//输出结果
+		// long sec = diff % nd % nh % nm / ns;
+		return day + "天" + hour + "小时" + min + "分钟";
+	}
+	/**
+	 * 获取两个日期之间的天数
+	 *
+	 * @param before
+	 * @param after
+	 * @return
+	 */
+	public static double diffDay(Date before, Date after) {
+		long beforeTime = before.getTime();
+		long afterTime = after.getTime();
+		return (afterTime - beforeTime) / (1000 * 60 * 60 * 24);
+	}
 	/**
 	 * 分钟差
 	 * @param endDate

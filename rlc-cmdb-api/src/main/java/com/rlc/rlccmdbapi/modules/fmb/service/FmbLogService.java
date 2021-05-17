@@ -77,4 +77,13 @@ public class FmbLogService extends CrudService<FmbLogDao, Fmblog> {
 		int x = 1/a;
 		dao.insert(fmbLog);
 	}
+	@DS("fmbdb")
+	public void saveFmbLog(){
+		com.rlc.rlccmdbapi.modules.fmb.entity.Fmblog fmbLog = new com.rlc.rlccmdbapi.modules.fmb.entity.Fmblog();
+		fmbLog.setTitle("fmb事务测试--log2");
+		fmbLog.setId(IdGen.uuid());
+		fmbLog.setIsNewRecord(true);
+		fmbLog.setType("1");
+		dao.insert(fmbLog);
+	}
 }

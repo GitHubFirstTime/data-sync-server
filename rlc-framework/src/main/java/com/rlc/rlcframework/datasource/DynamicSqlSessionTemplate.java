@@ -21,7 +21,7 @@ import static org.mybatis.spring.SqlSessionUtils.*;
 /**
  * 自定义SqlSessionTemplate，动态切换数据源
  * 
- * @author intenet
+ * @author internet
  */
 public class DynamicSqlSessionTemplate extends SqlSessionTemplate
 {

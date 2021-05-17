@@ -9,7 +9,10 @@
 
 package com.rlc.rlcbase.listener;
 
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
@@ -26,7 +29,9 @@ import javax.servlet.ServletContextEvent;
  * @since    JDK 1.8
  * @see 	 
  */
+@Component
 public class SpringInit extends ContextLoaderListener{
+	/** Spring应用上下文环境 */
 	private static WebApplicationContext springContext;  
 	public SpringInit() {
 		super();
@@ -56,5 +61,6 @@ public class SpringInit extends ContextLoaderListener{
 	public static Object getBean(String className) {
 		return getApplicationContext().getBean(className);
 	}
+
 }
 
