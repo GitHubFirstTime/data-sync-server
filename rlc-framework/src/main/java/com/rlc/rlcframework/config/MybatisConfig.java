@@ -53,7 +53,14 @@ public class MybatisConfig {
 //    public SqlSessionTemplate sqlSessionTemplate(@Qualifier("sqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
 //        return new SqlSessionTemplate(sqlSessionFactory);
 //    }
-//
+//    @Bean(name = "sqlSessionFactory")
+//    public SqlSessionFactory sqlSessionFactory(Environment env, @Qualifier("dynamicDataSource") DataSource dataSource) throws Exception {
+//        return createSqlSessionFactory(env, dataSource);
+//    }
+//    @Bean(name = "sqlSessionTemplate")
+//    public SqlSessionTemplate sqlSessionTemplate(@Qualifier("sqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
+//        return new SqlSessionTemplate(sqlSessionFactory);
+//    }
     public SqlSessionFactory createSqlSessionFactory(Environment env, DataSource dataSource) throws Exception
     {
         String typeAliasesPackage = env.getProperty("mybatis.type-aliases-package");
@@ -175,6 +182,7 @@ public class MybatisConfig {
         return null;
     }
 
+    //下面为动态多数据源配置区域
     @Bean(name = "sqlSessionFactory_CMDB")
     public SqlSessionFactory sqlSessionFactoryMaster(Environment env, @Qualifier("cmdbDataSource") DataSource dataSource) throws Exception
     {
@@ -198,12 +206,5 @@ public class MybatisConfig {
         customSqlSessionTemplate.setTargetSqlSessionFactorys(sqlSessionFactoryMap);
         return customSqlSessionTemplate;
     }
-//    @Bean(name = "sqlSessionFactory")
-//    public SqlSessionFactory sqlSessionFactory(Environment env, @Qualifier("dynamicDataSource") DataSource dataSource) throws Exception {
-//        return createSqlSessionFactory(env, dataSource);
-//    }
-//    @Bean(name = "sqlSessionTemplate")
-//    public SqlSessionTemplate sqlSessionTemplate(@Qualifier("sqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
-//        return new SqlSessionTemplate(sqlSessionFactory);
-//    }
+
 }

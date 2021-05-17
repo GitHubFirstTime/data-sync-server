@@ -144,26 +144,26 @@
                 </configuration>
             </plugin>
             <!--此插件生成ASCIIDOC-->
-         <!--   <plugin>
+            <plugin>
                 <groupId>io.github.swagger2markup</groupId>
                 <artifactId>swagger2markup-maven-plugin</artifactId>
                 <version>${swagger2markup.version}</version>
                 <configuration>
-                    &lt;!&ndash;此处端口一定要是当前项目启动所用的端口&ndash;&gt;
+                    <!--此处端口一定要是当前项目启动所用的端口-->
                     <swaggerInput>http://localhost:8091/v2/api-docs</swaggerInput>
                     <outputDir>src/docs/asciidoc/generated</outputDir>
                     <config>
-                        &lt;!&ndash; 除了ASCIIDOC之外，还有MARKDOWN和CONFLUENCE_MARKUP可选 &ndash;&gt;
+                        <!-- 除了ASCIIDOC之外，还有MARKDOWN和CONFLUENCE_MARKUP可选 -->
                         <swagger2markup.markupLanguage>ASCIIDOC</swagger2markup.markupLanguage>
                     </config>
                 </configuration>
-            </plugin>-->
+            </plugin>
             <!--此插件生成HTML和PDF-->
-            <!--<plugin>
+            <plugin>
                 <groupId>org.asciidoctor</groupId>
                 <artifactId>asciidoctor-maven-plugin</artifactId>
                 <version>1.5.3</version>
-                &lt;!&ndash; Include Asciidoctor PDF for pdf generation &ndash;&gt;
+                <!-- Include Asciidoctor PDF for pdf generation -->
                 <dependencies>
                     <dependency>
                         <groupId>org.asciidoctor</groupId>
@@ -176,7 +176,7 @@
                         <version>1.7.21</version>
                     </dependency>
                 </dependencies>
-                &lt;!&ndash; Configure generic document generation settings &ndash;&gt;
+                <!-- Configure generic document generation settings -->
                 <configuration>
                     <sourceDirectory>src/docs/asciidoc/generated</sourceDirectory>
                     <sourceHighlighter>coderay</sourceHighlighter>
@@ -184,8 +184,8 @@
                         <toc>left</toc>
                     </attributes>
                 </configuration>
-                &lt;!&ndash; Since each execution can only handle one backend, run
-                     separate executions for each desired output type &ndash;&gt;
+                <!-- Since each execution can only handle one backend, run
+                     separate executions for each desired output type -->
                 <executions>
                     <execution>
                         <id>output-html</id>
@@ -212,7 +212,7 @@
                     </execution>
 
                 </executions>
-            </plugin>-->
+            </plugin>
            <!-- <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>

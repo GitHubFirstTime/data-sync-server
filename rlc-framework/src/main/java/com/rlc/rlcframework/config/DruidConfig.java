@@ -37,31 +37,13 @@ import java.util.Properties;
  */
 @Configuration
 public class DruidConfig {
-    @Bean
-    @Primary
-    @ConfigurationProperties(prefix = "spring.datasource.cmdbdb")
-    public DataSource cmdbDataSource(Environment env)
-    {
-        DBConfig dbConfig = build(env,"spring.datasource.cmdbdb");
-        dbConfig.setDbType("mysql");
-        dbConfig.setDataSourceName("cmdbDataSource");
-        return getDataSource(dbConfig);
-    }
-
-    @Bean
-    @ConfigurationProperties("spring.datasource.fmbdb")
-//    @ConditionalOnProperty(prefix = "spring.datasource.fmbdb", name = "enabled", havingValue = "true")
-    public DataSource fmbDataSource(Environment env)
-    {
-        DBConfig dbConfig = build(env,"spring.datasource.fmbdb");
-        dbConfig.setDbType("oracle");
-        dbConfig.setDataSourceName("fmbDataSource");
-        return getDataSource(dbConfig);
-    }
+    /****BEGINNING*****/
+    /****基础方法区域****/
+    /****BEGINNING*****/
     protected DataSource getDataSource(DBConfig dbConfig)
     {
         DataSource ds = null;
-         String dbType = dbConfig.getDbType();
+        String dbType = dbConfig.getDbType();
         if(StringUtils.isBlank(dbType)){
             return ds;
         }
@@ -157,6 +139,36 @@ public class DruidConfig {
                 .get();
         return dbConfig;
     }
+    /****ENDING*****/
+    /**基础方法区域***/
+    /****ENDING****/
+
+
+    /*******BEGINNING*******/
+    /****动态多数据源配置区****/
+    /*******BEGINNING*******/
+    @Bean
+    @Primary
+    @ConfigurationProperties(prefix = "spring.datasource.cmdbdb")
+    public DataSource cmdbDataSource(Environment env)
+    {
+        DBConfig dbConfig = build(env,"spring.datasource.cmdbdb");
+        dbConfig.setDbType("mysql");
+        dbConfig.setDataSourceName("cmdbDataSource");
+        return getDataSource(dbConfig);
+    }
+
+    @Bean
+    @ConfigurationProperties("spring.datasource.fmbdb")
+//    @ConditionalOnProperty(prefix = "spring.datasource.fmbdb", name = "enabled", havingValue = "true")
+    public DataSource fmbDataSource(Environment env)
+    {
+        DBConfig dbConfig = build(env,"spring.datasource.fmbdb");
+        dbConfig.setDbType("oracle");
+        dbConfig.setDataSourceName("fmbDataSource");
+        return getDataSource(dbConfig);
+    }
+
     /**
      * 动态数据源配置
      *
@@ -178,4 +190,8 @@ public class DruidConfig {
         multipleDataSource.updateTargetDataSource(cmdbDataSource,targetDataSources);
         return multipleDataSource;
     }
+
+    /*******ENDING*******/
+    /***动态多数据源配置区***/
+    /*******ENDING*******/
 }
