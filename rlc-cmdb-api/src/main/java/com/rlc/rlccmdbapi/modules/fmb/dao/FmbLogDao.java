@@ -15,8 +15,8 @@ import com.rlc.rlccmdbapi.modules.fmb.entity.Fmblog;
  * @author xx
  * @version 2014-05-16
  */
-@DS("fmbdb")
 @MyBatisDao
+@DS("fmbdb")
 public interface FmbLogDao extends CrudDao<Fmblog> {
 
 	public void empty();

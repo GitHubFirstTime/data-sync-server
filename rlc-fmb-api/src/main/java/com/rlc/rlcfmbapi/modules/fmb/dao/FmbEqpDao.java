@@ -1,11 +1,13 @@
 package com.rlc.rlcfmbapi.modules.fmb.dao;
 
 import com.rlc.rlcbase.persistence.CrudDao;
+import com.rlc.rlcbase.persistence.annotation.DS;
 import com.rlc.rlcbase.persistence.annotation.MyBatisDao;
 import com.rlc.rlcfmbapi.modules.fmb.entity.FmbEqp;
 
 import java.util.List;
 
+@DS("fmbdb")
 @MyBatisDao
 public interface FmbEqpDao extends CrudDao<FmbEqp> {
     /**

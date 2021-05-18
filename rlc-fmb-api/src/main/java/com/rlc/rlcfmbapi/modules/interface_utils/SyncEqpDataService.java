@@ -2,6 +2,7 @@ package com.rlc.rlcfmbapi.modules.interface_utils;
 
 import com.google.common.collect.Lists;
 import com.rlc.rlcbase.kafka.ProducerService;
+import com.rlc.rlcbase.persistence.annotation.DS;
 import com.rlc.rlcbase.result.ResultData;
 import com.rlc.rlcbase.utils.Base64Util;
 import com.rlc.rlcfmbapi.modules.fmb.entity.FmbEqp;
@@ -48,8 +49,10 @@ public class SyncEqpDataService{
         try {
             EqpDTO eqpDTO = new EqpDTO();
             eqpDTO.setEqpType(eqpType);
-            List<EqpDTO> xqEqpDTOList = xqEqpService.findList(eqpDTO);
-            List<FmbEqp> fmbEqpList = fmbEqpService.findList(new FmbEqp());
+//            List<EqpDTO> xqEqpDTOList = xqEqpService.findList(eqpDTO);
+//            List<FmbEqp> fmbEqpList = fmbEqpService.findList(new FmbEqp());
+            List<EqpDTO> xqEqpDTOList = getEqpDTOList(eqpDTO);
+            List<FmbEqp> fmbEqpList = getFmbEqpList(new FmbEqp());
             SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 //        System.out.println("QuartzJob1----xqEqpDTOList="+xqEqpDTOList.size()+",fmbEqpList"+fmbEqpList.size()+"," + sdf.format(new Date()));
 
@@ -114,7 +117,16 @@ public class SyncEqpDataService{
             return ResultData.ERROR().message("同步失败");
         }
     }
-
+    public  List<EqpDTO> getEqpDTOList(EqpDTO eqpDTO){
+        List<EqpDTO> xqEqpDTOList = Lists.newArrayList();
+        xqEqpDTOList = xqEqpService.findList(eqpDTO);
+        return xqEqpDTOList;
+    }
+    public List<FmbEqp> getFmbEqpList(FmbEqp fmbEqp){
+        List<FmbEqp> fmbEqpList = Lists.newArrayList();
+        fmbEqpList = fmbEqpService.findList(fmbEqp);
+        return fmbEqpList;
+    }
     /**
      * 检查fmbeqp 有效性
      * @param xqEqpDTOList

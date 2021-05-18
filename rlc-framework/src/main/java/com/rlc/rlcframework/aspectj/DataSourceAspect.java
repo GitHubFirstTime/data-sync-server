@@ -2,6 +2,7 @@ package com.rlc.rlcframework.aspectj;
 
 import com.rlc.rlcbase.persistence.annotation.DS;
 import com.rlc.rlcbase.persistence.datasource.DynamicDataSourceContextHolder;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -20,8 +21,9 @@ import java.util.Objects;
  * @date 2021/5/13 17:33
  */
 @Aspect
-@Order(1)
+@Order(-10)
 @Component
+@Slf4j
 public class DataSourceAspect {
     @Pointcut("@annotation(com.rlc.rlcbase.persistence.annotation.DS)"
             + "|| @within(com.rlc.rlcbase.persistence.annotation.DS)")
@@ -56,13 +58,45 @@ public class DataSourceAspect {
      */
     public DS getDataSource(ProceedingJoinPoint point)
     {
-        MethodSignature signature = (MethodSignature) point.getSignature();
-        DS dataSource = AnnotationUtils.findAnnotation(signature.getMethod(), DS.class);
-        if (Objects.nonNull(dataSource))
-        {
+//        mybatis生成的代理类，所以获取它的接口来获取DbAnnotation注解信息
+        DS dataSource = null;
+        try {
+            Class<?> targetClass = point.getTarget().getClass().getInterfaces()[0];
+            dataSource = targetClass.getAnnotation(DS.class);
+        } catch (Exception e) {
+            log.info("类、接口级数据源注解为空");
+        }
+        if (Objects.nonNull(dataSource)) {
             return dataSource;
         }
+        try {
+            Class<?> targetClass = point.getTarget().getClass();
+            dataSource = targetClass.getAnnotation(DS.class);
+        } catch (Exception e) {
+            log.info("类、接口级数据源注解为空");
+        }
+        // 先判断类的注解，再判断方法注解
+        if (Objects.nonNull(dataSource)) {
+            return dataSource;
+        }
+        MethodSignature signature = (MethodSignature) point.getSignature();
+        dataSource = AnnotationUtils.findAnnotation(signature.getDeclaringType(), DS.class);
+        if (Objects.nonNull(dataSource)) {
+            return dataSource;
+        }
+        MethodSignature methodSignature = (MethodSignature) point.getSignature();
+        dataSource = methodSignature.getMethod().getAnnotation(DS.class);
+        log.info("使用方法级数据源注解");
+        return dataSource;
 
-        return AnnotationUtils.findAnnotation(signature.getDeclaringType(), DS.class);
+//        MethodSignature signature = (MethodSignature) point.getSignature();
+//        DS dataSource = AnnotationUtils.findAnnotation(signature.getDeclaringType(), DS.class);
+//        if (Objects.nonNull(dataSource))
+//        {
+//            return dataSource;
+//        }
+//        dataSource = AnnotationUtils.findAnnotation(signature.getMethod(), DS.class);
+//                log.info("使用方法级数据源注解{}",dataSource.value());
+//        return dataSource;
     }
 }

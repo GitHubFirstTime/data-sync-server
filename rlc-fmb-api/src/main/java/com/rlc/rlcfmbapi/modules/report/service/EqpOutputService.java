@@ -12,21 +12,19 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 public class EqpOutputService extends CrudService<EqpOutputDao,EqpOutputDTO> {
-    @Autowired
-    private EqpOutputDao eqpOutputDao;
 
     public List<EqpOutputDTO> getOutputDaily(String eqpType){
-        List<EqpOutputDTO> outputDaily = eqpOutputDao.getOutputDaily(eqpType);
+        List<EqpOutputDTO> outputDaily = dao.getOutputDaily(eqpType);
         return outputDaily;
     }
 
     public List<EqpOutputDTO> getOutputWeekly (String eqpType){
-        List<EqpOutputDTO> outputWeekly = eqpOutputDao.getOutputWeekly(eqpType);
+        List<EqpOutputDTO> outputWeekly = dao.getOutputWeekly(eqpType);
         return outputWeekly;
     }
 
     public List<EqpOutputDTO> getOutputMonthly(String eqpType){
-        List<EqpOutputDTO> outputWeekly = eqpOutputDao.getOutputMonthly(eqpType);
+        List<EqpOutputDTO> outputWeekly = dao.getOutputMonthly(eqpType);
         return outputWeekly;
     }
 }

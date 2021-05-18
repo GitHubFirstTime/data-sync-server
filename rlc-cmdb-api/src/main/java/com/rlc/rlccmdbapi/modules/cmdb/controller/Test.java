@@ -70,4 +70,16 @@ public class Test {
         }
         return ResultData.OK().message("sss");
     }
+    @RequestMapping("saveCMDBLOG")
+    public ResultData saveCMDBLOG(){
+
+
+        try {
+            fmbLogService.saveCMDBLOG();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultData.ERROR().message("ffff");
+        }
+        return ResultData.OK().message("sss");
+    }
 }

@@ -12,12 +12,9 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 public class EqpAcceptedGoodsRateService extends CrudService<EqpAcceptedGoodsRateDao,EqpAcceptedGoodsRateDTO> {
-    @Autowired
-    private EqpAcceptedGoodsRateDao eqpAcceptedGoodsRateDao;
+    public List<EqpAcceptedGoodsRateDTO> getGoodsRateDaily(){ return dao.getGoodsRateDaily(); };
 
-    public List<EqpAcceptedGoodsRateDTO> getGoodsRateDaily(){ return eqpAcceptedGoodsRateDao.getGoodsRateDaily(); };
+    public List<EqpAcceptedGoodsRateDTO> getGoodsRateWeekly(){ return dao.getGoodsRateWeekly(); };
 
-    public List<EqpAcceptedGoodsRateDTO> getGoodsRateWeekly(){ return eqpAcceptedGoodsRateDao.getGoodsRateWeekly(); };
-
-    public List<EqpAcceptedGoodsRateDTO> getGoodsRateMonthly(){ return eqpAcceptedGoodsRateDao.getGoodsRateMonthly(); };
+    public List<EqpAcceptedGoodsRateDTO> getGoodsRateMonthly(){ return dao.getGoodsRateMonthly(); };
 }

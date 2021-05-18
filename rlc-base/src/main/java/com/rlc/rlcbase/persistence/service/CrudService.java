@@ -17,7 +17,7 @@ import java.util.List;
  * @author xx
  * @version 2014-05-16
  */
-@Transactional(readOnly = true)
+//@Transactional(readOnly = true)
 public abstract class CrudService<D extends CrudDao<T>, T extends DataEntity<T>> extends BaseService {
 	
 	/**

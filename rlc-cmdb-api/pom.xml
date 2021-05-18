@@ -48,6 +48,12 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <groupId>com.rlc</groupId>
+            <artifactId>rlc-fmb-api</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>tibco</groupId>
             <artifactId>tibrvj</artifactId>
             <systemPath>${lib.path}/tibrvj.jar</systemPath>
@@ -129,20 +135,20 @@
     </profiles>-->
     <build>
         <resources>
-            <resource>
+            <!--<resource>
                 <directory>src/main/java</directory>
                 <includes>
                     <include>**/*.*</include>
                 </includes>
-            </resource>
-            <resource>
-                <!--开启过滤，用指定的参数替换directory下的文件中的参数-->
+            </resource>-->
+            <!--<resource>
+                &lt;!&ndash;开启过滤，用指定的参数替换directory下的文件中的参数&ndash;&gt;
                 <directory>src/main/resources</directory>
                 <includes>
                     <include>**/*.*</include>
                 </includes>
-                <!--<filtering>true</filtering>-->
-            </resource>
+                &lt;!&ndash;<filtering>true</filtering>&ndash;&gt;
+            </resource>-->
             <!--<resource>
                 &lt;!&ndash;开启过滤，用指定的参数替换directory下的文件中的参数&ndash;&gt;
                 <directory>src/main/resources</directory>

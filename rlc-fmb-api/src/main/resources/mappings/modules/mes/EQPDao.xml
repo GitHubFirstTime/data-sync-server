@@ -10,7 +10,6 @@
             M .eqpType AS "eqpType",
             M . FLOOR,
             M .RECIPENAME,
-            /*n.state AS "eqpRunState",*/
             o.EAPSTATE AS "eqpRunState",
             o.EQPMODE AS "controlMode",
             o.DISPATCHINGMODE,

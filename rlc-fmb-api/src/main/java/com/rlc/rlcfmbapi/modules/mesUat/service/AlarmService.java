@@ -13,63 +13,61 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 public class AlarmService extends CrudService<AlarmDao,AlarmDTO> {
-    @Autowired
-    private AlarmDao alarmDao;
     //分页
     public Page<AlarmDTO> findPage(Page<AlarmDTO> page, AlarmDTO log) {
         return super.findPage(page, log);
     }
     //单台设备告警信息
     public AlarmDTO getAlarmDetail(String toolId,String alarmId){
-        AlarmDTO alarmDetail = alarmDao.getAlarmDetail(toolId, alarmId);
+        AlarmDTO alarmDetail = dao.getAlarmDetail(toolId, alarmId);
         return alarmDetail;
     }
     //设备告警信息
     public List<AlarmDTO> getAlarmInfo(int page_num,int page_size,String toolId){
-        List<AlarmDTO> alarmInfo = alarmDao.getAlarmInfo(page_num,page_size,toolId);
+        List<AlarmDTO> alarmInfo = dao.getAlarmInfo(page_num,page_size,toolId);
         return alarmInfo;
     }
     //单台设备告警信息统计
     public List<AlarmDTO> getAlarmInfoList (int page_num,int page_size,String device_type){
-        List<AlarmDTO> alarmInfoList = alarmDao.getAlarmInfoList(page_num,page_size,device_type);
+        List<AlarmDTO> alarmInfoList = dao.getAlarmInfoList(page_num,page_size,device_type);
         return alarmInfoList;
     }
     //已处理一楼
     public List<AlarmDTO> getAlarmInfoListOneFloor (int page_num,int page_size){
-        List<AlarmDTO> alarmInfoListOneFloor = alarmDao.getAlarmInfoListOneFloor(page_num,page_size);
+        List<AlarmDTO> alarmInfoListOneFloor = dao.getAlarmInfoListOneFloor(page_num,page_size);
         return alarmInfoListOneFloor;
     }
 
     //已处理二楼
     public List<AlarmDTO> getAlarmInfoListTwoFloor (int page_num,int page_size){
-        List<AlarmDTO> alarmInfoListTwoFloor = alarmDao.getAlarmInfoListTwoFloor(page_num,page_size);
+        List<AlarmDTO> alarmInfoListTwoFloor = dao.getAlarmInfoListTwoFloor(page_num,page_size);
         return alarmInfoListTwoFloor;
     }
 
     //未处理的告警列表
     public  List<AlarmDTO> getAlarmOpenList(){
-        List<AlarmDTO> alarmOpenList = alarmDao.getAlarmOpenList();
+        List<AlarmDTO> alarmOpenList = dao.getAlarmOpenList();
         return alarmOpenList;
     }
 
     //未处理的一楼
     public  List<AlarmDTO> getAlarmOpenOneFloor(){
-        List<AlarmDTO> alarmOpenOneFloor = alarmDao.getAlarmOpenOneFloor();
+        List<AlarmDTO> alarmOpenOneFloor = dao.getAlarmOpenOneFloor();
         return alarmOpenOneFloor;
     }
     //未处理的二楼
     public List<AlarmDTO> getAlarmOpenTwoFloor(){
-        List<AlarmDTO> alarmOpenTwoFloor = alarmDao.getAlarmOpenTwoFloor();
+        List<AlarmDTO> alarmOpenTwoFloor = dao.getAlarmOpenTwoFloor();
         return alarmOpenTwoFloor;
     }
     //未处理的单个车间
     public List<AlarmDTO> getAlarmOpenOneTypeEqp(String device_type){
-        List<AlarmDTO> alarmOpenOneTypeEqp = alarmDao.getAlarmOpenOneTypeEqp(device_type);
+        List<AlarmDTO> alarmOpenOneTypeEqp = dao.getAlarmOpenOneTypeEqp(device_type);
         return alarmOpenOneTypeEqp;
     }
     //未处理的单个设备
     public List<AlarmDTO> getAlarmOpenOneEqp(String device_name){
-        List<AlarmDTO> alarmOpenOneEqp = alarmDao.getAlarmOpenOneEqp(device_name);
+        List<AlarmDTO> alarmOpenOneEqp = dao.getAlarmOpenOneEqp(device_name);
         return alarmOpenOneEqp;
     }
 }

@@ -10,6 +10,7 @@
 package com.rlc.rlcfmbapi.modules.fmb.dao;
 
 import com.rlc.rlcbase.persistence.CrudDao;
+import com.rlc.rlcbase.persistence.annotation.DS;
 import com.rlc.rlcbase.persistence.annotation.MyBatisDao;
 import com.rlc.rlcfmbapi.modules.fmb.entity.FmbEqpStatusHis;
 
@@ -26,6 +27,7 @@ import java.util.List;
  * @see 	 
  */
 @MyBatisDao
+@DS("fmbdb")
 public interface FmbEqpStatusHisDao extends CrudDao<FmbEqpStatusHis> {
     public List<FmbEqpStatusHis> getNewStatusByEqp() throws Exception;
     //批量新增

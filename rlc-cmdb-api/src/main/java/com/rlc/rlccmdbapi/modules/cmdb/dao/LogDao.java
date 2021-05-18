@@ -16,6 +16,7 @@ import com.rlc.rlccmdbapi.modules.cmdb.entity.Log;
  * @version 2014-05-16
  */
 @MyBatisDao
+@DS("cmdbdb")
 public interface LogDao extends CrudDao<Log> {
 
 	public void empty();

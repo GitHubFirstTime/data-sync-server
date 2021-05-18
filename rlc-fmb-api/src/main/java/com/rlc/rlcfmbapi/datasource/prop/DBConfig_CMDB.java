@@ -10,8 +10,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @date 2021/4/23 21:42
  */
 //@PropertySource(value = "classpath:application-${spring.profiles.active}.yml",encoding = "utf-8",factory = YmlPropertySourceFactory.class)
-@ConfigurationProperties(prefix = "spring.datasource.cmdbdb")
-@Data
+//@ConfigurationProperties(prefix = "spring.datasource.cmdbdb")
+//@Data
 public class DBConfig_CMDB {
     private String driverClassName;
     private String url;

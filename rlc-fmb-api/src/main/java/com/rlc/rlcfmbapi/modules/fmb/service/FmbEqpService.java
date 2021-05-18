@@ -1,5 +1,6 @@
 package com.rlc.rlcfmbapi.modules.fmb.service;
 
+import com.rlc.rlcbase.persistence.annotation.DS;
 import com.rlc.rlcbase.persistence.service.CrudService;
 import com.rlc.rlcfmbapi.modules.fmb.dao.FmbEqpDao;
 import com.rlc.rlcfmbapi.modules.fmb.entity.FmbEqp;
@@ -9,8 +10,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional(readOnly = true)
+//@Transactional(readOnly = true)
 public class FmbEqpService extends CrudService<FmbEqpDao, FmbEqp> {
+    @DS("fmbdb")
+    public List<FmbEqp> findList(FmbEqp fmbEqp){
+        return super.findList(fmbEqp);
+    }
     public void insertBatch(List<FmbEqp> fmbEqpList) throws Exception{
         dao.insertBatch(fmbEqpList);
     }

@@ -1,14 +1,15 @@
 package com.rlc.rlcframework.config;
 
 import com.rlc.rlcbase.persistence.interceptor.PaginationInterceptor;
-import com.rlc.rlcframework.datasource.DynamicDataSource;
 import com.rlc.rlcframework.datasource.DynamicSqlSessionTemplate;
+import com.rlc.rlcframework.transaction.MultiDataSourceTransactionFactory;
+import com.rlc.rlcframework.transaction.MyTransactionsFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.io.VFS;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
-import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.boot.autoconfigure.SpringBootVFS;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -80,6 +81,8 @@ public class MybatisConfig {
         sessionFactory.setPlugins(paginationInterceptor);
         sessionFactory.setMapperLocations(resolveMapperLocations(StringUtils.split(mapperLocations, ",")));
         sessionFactory.setConfigLocation(new DefaultResourceLoader().getResource(configLocation));
+        sessionFactory.setTransactionFactory(new MultiDataSourceTransactionFactory());
+        sessionFactory.getObject().getConfiguration().setMapUnderscoreToCamelCase(true);
         return sessionFactory.getObject();
     }
     public static String setTypeAliasesPackage(String typeAliasesPackage)
@@ -183,28 +186,61 @@ public class MybatisConfig {
     }
 
     //下面为动态多数据源配置区域
-    @Bean(name = "sqlSessionFactory_CMDB")
+    @Bean(name = "sqlSessionFactoryCMDB")
     public SqlSessionFactory sqlSessionFactoryMaster(Environment env, @Qualifier("cmdbDataSource") DataSource dataSource) throws Exception
     {
         return createSqlSessionFactory(env, dataSource);
     }
 
-    @Bean(name = "sqlSessionFactory_FMB")
+    @Bean(name = "sqlSessionFactoryFMB")
     public SqlSessionFactory sqlSessionFactorySlave(Environment env, @Qualifier(value = "fmbDataSource") DataSource dataSource) throws Exception
     {
         return createSqlSessionFactory(env, dataSource);
     }
+    @Bean(name = "sqlSessionFactoryMESUAT")
+    public SqlSessionFactory sqlSessionFactory_MESUAT(Environment env, @Qualifier("mesUatDataSource") DataSource dataSource) throws Exception
+    {
+        return createSqlSessionFactory(env, dataSource);
+    }
+
+    @Bean(name = "sqlSessionFactoryMES")
+    public SqlSessionFactory sqlSessionFactory_MES(Environment env, @Qualifier(value = "mesDataSource") DataSource dataSource) throws Exception
+    {
+        return createSqlSessionFactory(env, dataSource);
+    }
+    @Bean(name = "sqlSessionFactoryREPORT")
+    public SqlSessionFactory sqlSessionFactory_REPORT(Environment env, @Qualifier(value = "reportDataSource") DataSource dataSource) throws Exception
+    {
+        return createSqlSessionFactory(env, dataSource);
+    }
     @Bean(name = "sqlSessionTemplate")
-    public DynamicSqlSessionTemplate sqlSessionTemplate(@Qualifier("sqlSessionFactory_CMDB") SqlSessionFactory factoryMaster,
-                                                        @Qualifier("sqlSessionFactory_FMB") SqlSessionFactory factorySlave) throws Exception
+    public DynamicSqlSessionTemplate sqlSessionTemplate(@Qualifier("sqlSessionFactoryCMDB") SqlSessionFactory factoryMaster,
+                                                        @Qualifier("sqlSessionFactoryFMB") SqlSessionFactory factorySlave,
+                                                        @Qualifier("sqlSessionFactoryMESUAT") SqlSessionFactory factoryMesUat,
+                                                        @Qualifier("sqlSessionFactoryMES") SqlSessionFactory factoryMes,
+                                                        @Qualifier("sqlSessionFactoryREPORT") SqlSessionFactory factoryReport) throws Exception
     {
         Map<Object, SqlSessionFactory> sqlSessionFactoryMap = new HashMap<>();
         sqlSessionFactoryMap.put("cmdbdb", factoryMaster);
         sqlSessionFactoryMap.put("fmbdb", factorySlave);
+        sqlSessionFactoryMap.put("mesuatdb", factoryMesUat);
+        sqlSessionFactoryMap.put("mesdb", factoryMes);
+        sqlSessionFactoryMap.put("reportdb", factoryReport);
 
         DynamicSqlSessionTemplate customSqlSessionTemplate = new DynamicSqlSessionTemplate(factoryMaster);
         customSqlSessionTemplate.setTargetSqlSessionFactorys(sqlSessionFactoryMap);
         return customSqlSessionTemplate;
     }
-
+//    @Bean(name = "userSessionFactory")
+//    public SqlSessionFactory sqlSessionFactory(Environment env, @Autowired @Qualifier("dynamicDataSource") DataSource dynamicDataSource)
+//            throws Exception {
+////        SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
+////        // 注意这里替换成我们写的DynamicDatasource
+////        sqlSessionFactoryBean.setDataSource(dynamicDataSource);
+////        // 替换原有的事物工厂，不然无法切换数据库
+////        sqlSessionFactoryBean.setTransactionFactory(new MyTransactionsFactory());
+////        sqlSessionFactoryBean.getObject().getConfiguration().setMapUnderscoreToCamelCase(true);
+//
+//        return  createSqlSessionFactory(env, dynamicDataSource);
+//    }
 }

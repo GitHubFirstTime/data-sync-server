@@ -1,6 +1,7 @@
 package com.rlc.rlcfmbapi.modules.mesUat.dao;
 
 import com.rlc.rlcbase.persistence.CrudDao;
+import com.rlc.rlcbase.persistence.annotation.DS;
 import com.rlc.rlcbase.persistence.annotation.MyBatisDao;
 import com.rlc.rlcfmbapi.modules.mesUat.entity.AlarmDTO;
 import org.apache.ibatis.annotations.Param;
@@ -8,6 +9,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 @MyBatisDao
+@DS("mesuatdb")
 public interface AlarmDao extends CrudDao<AlarmDTO> {
     //告警详情
     public AlarmDTO getAlarmDetail(@Param("toolId") String toolId, @Param("alarmId") String alarmId);

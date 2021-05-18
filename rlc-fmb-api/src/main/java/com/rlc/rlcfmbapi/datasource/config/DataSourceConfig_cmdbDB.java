@@ -82,20 +82,20 @@ public class DataSourceConfig_cmdbDB {
 //        atomikosDataSourceBean.setUniqueResourceName("cmdbDataSource");
 //        return atomikosDataSourceBean;
 //    }
-    private Properties build(DBConfig_CMDB dbConfigCmdb) {
-        Properties prop = new Properties();
-        prop.put("username", dbConfigCmdb.getUsername());
-        prop.put("password", dbConfigCmdb.getPassword());
-        prop.put("url", dbConfigCmdb.getUrl());
-        prop.put("driverClassName", dbConfigCmdb.getDriverClassName());
-        prop.put("initialSize", String.valueOf(dbConfigCmdb.getInitialSize()));
-        prop.put("maxActive", String.valueOf(dbConfigCmdb.getMaxActive()));
-        prop.put("minIdle", String.valueOf(dbConfigCmdb.getMinIdle()));
-        prop.put("maxWait", String.valueOf(dbConfigCmdb.getMaxWait()));
-        prop.put("testOnBorrow", String.valueOf(dbConfigCmdb.getTestOnBorrow()));
-        /*prop.put("testQuery", dbConfigCmdb.getTestQuery());*/
-        return prop;
-    }
+//    private Properties build(DBConfig_CMDB dbConfigCmdb) {
+//        Properties prop = new Properties();
+//        prop.put("username", dbConfigCmdb.getUsername());
+//        prop.put("password", dbConfigCmdb.getPassword());
+//        prop.put("url", dbConfigCmdb.getUrl());
+//        prop.put("driverClassName", dbConfigCmdb.getDriverClassName());
+//        prop.put("initialSize", String.valueOf(dbConfigCmdb.getInitialSize()));
+//        prop.put("maxActive", String.valueOf(dbConfigCmdb.getMaxActive()));
+//        prop.put("minIdle", String.valueOf(dbConfigCmdb.getMinIdle()));
+//        prop.put("maxWait", String.valueOf(dbConfigCmdb.getMaxWait()));
+//        prop.put("testOnBorrow", String.valueOf(dbConfigCmdb.getTestOnBorrow()));
+//        /*prop.put("testQuery", dbConfigCmdb.getTestQuery());*/
+//        return prop;
+//    }
 
 //    @Primary
 //    @Bean("cmdbDBSqlSessionFactory")

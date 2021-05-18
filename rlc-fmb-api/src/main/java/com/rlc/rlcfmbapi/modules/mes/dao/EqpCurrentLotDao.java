@@ -1,5 +1,8 @@
 package com.rlc.rlcfmbapi.modules.mes.dao;
 
+import com.rlc.rlcbase.persistence.annotation.DS;
+import com.rlc.rlcbase.persistence.annotation.MyBatisDao;
+
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +17,8 @@ import java.util.Map;
  * @date 2020/9/27 17:51
  * @since JDK 1.8
  */
+@DS("mesdb")
+@MyBatisDao
 public interface EqpCurrentLotDao {
     /**
      * 查询指定机台中晶棒信息

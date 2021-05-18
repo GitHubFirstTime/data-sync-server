@@ -2,12 +2,14 @@ package com.rlc.rlcfmbapi.modules.mes.dao;
 
 
 import com.rlc.rlcbase.persistence.CrudDao;
+import com.rlc.rlcbase.persistence.annotation.DS;
 import com.rlc.rlcbase.persistence.annotation.MyBatisDao;
 import com.rlc.rlcfmbapi.modules.mes.entity.EqpDTO;
 
 import java.util.List;
 import java.util.Map;
 
+@DS("mesdb")
 @MyBatisDao
 public interface EqpDao extends CrudDao<EqpDTO> {
 

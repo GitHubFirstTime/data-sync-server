@@ -1,6 +1,7 @@
 package com.rlc.rlcfmbapi.modules.mes.dao;
 
 import com.rlc.rlcbase.persistence.CrudDao;
+import com.rlc.rlcbase.persistence.annotation.DS;
 import com.rlc.rlcbase.persistence.annotation.MyBatisDao;
 import com.rlc.rlcfmbapi.modules.mes.entity.PmsInfoDTO;
 import org.apache.ibatis.annotations.Param;
@@ -8,6 +9,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 @MyBatisDao
+@DS("mesdb")
 public interface PmsInfoDao extends CrudDao<PmsInfoDTO> {
     //维保信息列表
     public List<PmsInfoDTO> getPmsInfoOne(@Param("equipmentName") String equipmentName, @Param("page_num") int page_num, @Param("page_size") int page_size);

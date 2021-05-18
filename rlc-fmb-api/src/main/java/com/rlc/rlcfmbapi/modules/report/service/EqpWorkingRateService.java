@@ -12,30 +12,28 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 public class EqpWorkingRateService extends CrudService<EqpWorkingRateDao,EqpWorkingRateDTO> {
-    @Autowired
-    private EqpWorkingRateDao eqpWorkingRateDao;
 
-    public List<EqpWorkingRateDTO> getXQWorkingRateDaily(){ return eqpWorkingRateDao.getXQWorkingRateDaily(); };
+    public List<EqpWorkingRateDTO> getXQWorkingRateDaily(){ return dao.getXQWorkingRateDaily(); };
 
-    public List<EqpWorkingRateDTO> getXQWorkingRateWeekly(){ return eqpWorkingRateDao.getXQWorkingRateWeekly(); };
+    public List<EqpWorkingRateDTO> getXQWorkingRateWeekly(){ return dao.getXQWorkingRateWeekly(); };
 
-    public List<EqpWorkingRateDTO> getXQWorkingRateMonthly(){ return eqpWorkingRateDao.getXQWorkingRateMonthly(); };
+    public List<EqpWorkingRateDTO> getXQWorkingRateMonthly(){ return dao.getXQWorkingRateMonthly(); };
 
-    public List<EqpWorkingRateDTO> getTJWorkingRateDaily(){ return eqpWorkingRateDao.getTJWorkingRateDaily(); };
+    public List<EqpWorkingRateDTO> getTJWorkingRateDaily(){ return dao.getTJWorkingRateDaily(); };
 
-    public List<EqpWorkingRateDTO> getTJWorkingRateWeekly(){ return eqpWorkingRateDao.getTJWorkingRateWeekly(); };
+    public List<EqpWorkingRateDTO> getTJWorkingRateWeekly(){ return dao.getTJWorkingRateWeekly(); };
 
-    public List<EqpWorkingRateDTO> getTJWorkingRateMonthly(){ return eqpWorkingRateDao.getTJWorkingRateMonthly(); };
+    public List<EqpWorkingRateDTO> getTJWorkingRateMonthly(){ return dao.getTJWorkingRateMonthly(); };
 
-    public List<EqpWorkingRateDTO> getQXWorkingRateDaily(){ return eqpWorkingRateDao.getQXWorkingRateDaily(); };
+    public List<EqpWorkingRateDTO> getQXWorkingRateDaily(){ return dao.getQXWorkingRateDaily(); };
 
-    public List<EqpWorkingRateDTO> getQXWorkingRateWeekly(){ return eqpWorkingRateDao.getQXWorkingRateWeekly(); };
+    public List<EqpWorkingRateDTO> getQXWorkingRateWeekly(){ return dao.getQXWorkingRateWeekly(); };
 
-    public List<EqpWorkingRateDTO> getQXWorkingRateMonthly(){ return eqpWorkingRateDao.getQXWorkingRateMonthly(); };
+    public List<EqpWorkingRateDTO> getQXWorkingRateMonthly(){ return dao.getQXWorkingRateMonthly(); };
 
-    public List<EqpWorkingRateDTO> getFXWorkingRateDaily(){ return eqpWorkingRateDao.getFXWorkingRateDaily(); };
+    public List<EqpWorkingRateDTO> getFXWorkingRateDaily(){ return dao.getFXWorkingRateDaily(); };
 
-    public List<EqpWorkingRateDTO> getFXWorkingRateWeekly(){ return eqpWorkingRateDao.getFXWorkingRateWeekly(); };
+    public List<EqpWorkingRateDTO> getFXWorkingRateWeekly(){ return dao.getFXWorkingRateWeekly(); };
 
-    public List<EqpWorkingRateDTO> getFXWorkingRateMonthly(){ return eqpWorkingRateDao.getFXWorkingRateMonthly(); };
+    public List<EqpWorkingRateDTO> getFXWorkingRateMonthly(){ return dao.getFXWorkingRateMonthly(); };
 }

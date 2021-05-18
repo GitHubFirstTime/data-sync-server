@@ -1,6 +1,7 @@
 package com.rlc.rlcfmbapi.modules.mes.dao;
 
 import com.rlc.rlcbase.persistence.CrudDao;
+import com.rlc.rlcbase.persistence.annotation.DS;
 import com.rlc.rlcbase.persistence.annotation.MyBatisDao;
 import com.rlc.rlcfmbapi.modules.mes.entity.EqpDetailDTO;
 import org.apache.ibatis.annotations.Param;
@@ -8,6 +9,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 @MyBatisDao
+@DS("mesdb")
 public interface EqpDetailDao extends CrudDao<EqpDetailDTO> {
     /*拿到一条设备信息*/
     EqpDetailDTO getEQPDetailsOne(@Param("device_name") String device_name);

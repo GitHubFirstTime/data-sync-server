@@ -24,7 +24,7 @@ public class EqpCapacityService {
 
     public void SyncEqpCapacity(){
         try{
-            logger.info("获取容量信息成功，检测时间:{}",sdf.format(new Date()));
+
             JSONArray jsonArray = new JSONArray();
             for (int i = 0; i < 6; i++) {
                 JSONObject obj = new JSONObject();
@@ -62,6 +62,7 @@ public class EqpCapacityService {
                     return;
                 }
             }
+            logger.info("获取容量信息成功，检测时间:{}",sdf.format(new Date()));
             producerService.sendMsg("capacity_stat","capacity_stat",jsonArray.toString());
         }catch (Exception e){
             logger.error("获取容量信息失败"+e.getMessage());

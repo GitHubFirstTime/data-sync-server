@@ -5,6 +5,7 @@ import com.alibaba.druid.pool.xa.DruidXADataSource;
 import com.atomikos.jdbc.AtomikosDataSourceBean;
 import com.mysql.cj.jdbc.MysqlXADataSource;
 import com.rlc.rlcbase.persistence.interceptor.PaginationInterceptor;
+import com.rlc.rlcbase.utils.spring.SpringUtils;
 import com.rlc.rlcframework.datasource.DynamicDataSource;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.io.VFS;
@@ -148,7 +149,7 @@ public class DruidConfig {
     /****动态多数据源配置区****/
     /*******BEGINNING*******/
     @Bean
-    @Primary
+//    @Primary
     @ConfigurationProperties(prefix = "spring.datasource.cmdbdb")
     public DataSource cmdbDataSource(Environment env)
     {
@@ -168,7 +169,33 @@ public class DruidConfig {
         dbConfig.setDataSourceName("fmbDataSource");
         return getDataSource(dbConfig);
     }
-
+    @Bean
+    @ConfigurationProperties("spring.datasource.mesuatdb")
+    public DataSource mesUatDataSource(Environment env)
+    {
+        DBConfig dbConfig = build(env,"spring.datasource.mesuatdb");
+        dbConfig.setDbType("oracle");
+        dbConfig.setDataSourceName("mesUatDataSource");
+        return getDataSource(dbConfig);
+    }
+    @Bean
+    @ConfigurationProperties("spring.datasource.mesdb")
+    public DataSource mesDataSource(Environment env)
+    {
+        DBConfig dbConfig = build(env,"spring.datasource.mesdb");
+        dbConfig.setDbType("oracle");
+        dbConfig.setDataSourceName("mesDataSource");
+        return getDataSource(dbConfig);
+    }
+    @Bean
+    @ConfigurationProperties("spring.datasource.reportdb")
+    public DataSource reportDataSource(Environment env)
+    {
+        DBConfig dbConfig = build(env,"spring.datasource.reportdb");
+        dbConfig.setDbType("oracle");
+        dbConfig.setDataSourceName("reportDataSource");
+        return getDataSource(dbConfig);
+    }
     /**
      * 动态数据源配置
      *
@@ -178,17 +205,45 @@ public class DruidConfig {
      */
     @Bean(name = "dynamicDataSource")
     @Primary
-    public DataSource dynamicDataSource(@Qualifier("cmdbDataSource") DataSource cmdbDataSource, @Qualifier("fmbDataSource") DataSource fmbDataSource) {
+    /*public DataSource dynamicDataSource(@Qualifier("cmdbDataSource") DataSource cmdbDataSource, @Qualifier("fmbDataSource") DataSource fmbDataSource
+    ,@Qualifier("mesUatDataSource") DataSource mesUatDataSource, @Qualifier("mesDataSource") DataSource mesDataSource, @Qualifier("reportDataSource") DataSource reportDataSource) {*/
+    public DataSource dynamicDataSource(DataSource cmdbDataSource) {
         DynamicDataSource multipleDataSource = new DynamicDataSource();
         Map<Object, Object> targetDataSources = new HashMap<>();
         targetDataSources.put("cmdbDataSource", cmdbDataSource);
-        targetDataSources.put("fmbDataSource", fmbDataSource);
+//        targetDataSources.put("fmbDataSource", fmbDataSource);
+//        targetDataSources.put("mesUatDataSource", mesUatDataSource);
+//        targetDataSources.put("mesDataSource", mesDataSource);
+//        targetDataSources.put("reportDataSource", reportDataSource);
         //设置默认数据源
-        multipleDataSource.setDefaultTargetDataSource(cmdbDataSource);
+//        multipleDataSource.setDefaultTargetDataSource(cmdbDataSource);
         //添加数据源
-        multipleDataSource.setTargetDataSources(targetDataSources);
+//        multipleDataSource.setTargetDataSources(targetDataSources);
+
+        setDataSource(targetDataSources,"fmbDataSource","fmbDataSource");
+        setDataSource(targetDataSources,"mesUatDataSource","mesUatDataSource");
+        setDataSource(targetDataSources,"mesDataSource","mesDataSource");
+        setDataSource(targetDataSources,"reportDataSource","reportDataSource");
         multipleDataSource.updateTargetDataSource(cmdbDataSource,targetDataSources);
         return multipleDataSource;
+    }
+    /**
+     * 设置数据源
+     *
+     * @param targetDataSources 备选数据源集合
+     * @param sourceName 数据源名称
+     * @param beanName bean名称
+     */
+    public void setDataSource(Map<Object, Object> targetDataSources, String sourceName, String beanName)
+    {
+        try
+        {
+            DataSource dataSource = SpringUtils.getBean(beanName);
+            targetDataSources.put(sourceName, dataSource);
+        }
+        catch (Exception e)
+        {
+        }
     }
 
     /*******ENDING*******/

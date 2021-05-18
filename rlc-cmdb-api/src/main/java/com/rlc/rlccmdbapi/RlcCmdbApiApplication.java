@@ -16,9 +16,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
+//取消自动配置数据源
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class,DruidDataSourceAutoConfigure.class, DataSourceTransactionManagerAutoConfiguration.class},
-scanBasePackages = {"com.rlc.rlcbase","com.rlc.rlccmdbapi","com.rlc.rlcframework"}
+scanBasePackages = {"com.rlc.rlcbase","com.rlc.rlccmdbapi","com.rlc.rlcframework","com.rlc.rlcfmbapi"}
 )
 @EnableTransactionManagement(proxyTargetClass=true)//开启事务 用CGLib代理方式
 public class RlcCmdbApiApplication {

@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.jta.JtaTransactionManager;
 
+import javax.transaction.SystemException;
 import javax.transaction.TransactionManager;
 import javax.transaction.UserTransaction;
 
@@ -22,9 +23,11 @@ import javax.transaction.UserTransaction;
 public class TXManagerConfig {
     @Bean(name = "transactionManager")
     @Primary
-    public JtaTransactionManager regTransactionManager () {
+    public JtaTransactionManager regTransactionManager () throws SystemException {
         UserTransactionManager userTransactionManager = new UserTransactionManager();
+        userTransactionManager.setForceShutdown(false);
         UserTransaction userTransaction = new UserTransactionImp();
+        userTransaction.setTransactionTimeout(10000);
         return new JtaTransactionManager(userTransaction, userTransactionManager);
     }
 }

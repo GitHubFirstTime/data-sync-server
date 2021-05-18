@@ -22,6 +22,6 @@ public class Quartz_EqpCpacity extends QuartzJobBean {
         if(null==capacityService){
             capacityService = SpringInit.getBean(EqpCapacityService.class);
         }
-        capacityService.SyncEqpCapacity();
+//        capacityService.SyncEqpCapacity();
     }
 }

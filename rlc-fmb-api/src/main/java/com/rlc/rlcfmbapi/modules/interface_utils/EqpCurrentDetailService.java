@@ -35,8 +35,8 @@ public class EqpCurrentDetailService {
     private EqpDetailService eqpDetailService;
     @Autowired
     private ProducerService producerService;
-    @Autowired
-    private FmbEqpService fmbEqpService;
+//    @Autowired
+//    private FmbEqpService fmbEqpService;
     public void SyncEqpState(String eqpType){
         try {
             List<EqpDetailDTO> allEqpRunInfoList = eqpDetailService.getAllEqpRunInfoList();

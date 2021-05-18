@@ -40,6 +40,8 @@ public class DynamicDataSourceContextHolder
      */
     public static void clearDataSourceType()
     {
+        String dsType = CONTEXT_HOLDER.get();
+        log.info("清除数据源：{}", dsType);
         CONTEXT_HOLDER.remove();
     }
 }
