@@ -12,6 +12,7 @@
         <groupId>com.rlc</groupId>
         <artifactId>data-sync-server</artifactId>
         <version>0.0.1</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <groupId>com.rlc</groupId>
     <artifactId>rlc-cmdb-api</artifactId>
@@ -165,6 +166,9 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <fork>true</fork> <!-- 如果没有该配置，devtools不会生效 -->
+                    <mainClass>com.rlc.rlccmdbapi.RlcCmdbApiApplication</mainClass>
+                    <includeSystemScope>true</includeSystemScope>
+                    <layout>ZIP</layout>
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>
@@ -172,6 +176,13 @@
                         </exclude>
                     </excludes>
                 </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <!--此插件生成ASCIIDOC-->
             <plugin>

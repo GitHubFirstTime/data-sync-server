@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("addJob")
+@RequestMapping("jobC")
 public class QuartzTest {
     @Autowired
     QuartzManager quartzManager;
-    @RequestMapping("aa")
+    @RequestMapping("addJob")
     public ResultData addJob(){
         try {
             JobDataMap paramsMap = new JobDataMap();
