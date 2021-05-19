@@ -80,6 +80,7 @@ public class FmbLogService extends CrudService<FmbLogDao, Fmblog> {
 ////		int x = 1/a;
 //		dao.insert(fmbLog);
 //	}
+	//分布式事务——示例
 	@Transactional(readOnly = false)
 	public void saveAll() throws Exception{
 		SpringUtils.getAopProxy(this).saveCMDBLOG();
