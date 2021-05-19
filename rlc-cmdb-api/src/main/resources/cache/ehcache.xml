@@ -9,7 +9,7 @@
          user.dir :          用户当前工作目录
          java.io.tmpdir :    默认临时文件路径
      -->
-    <diskStore path="../temp/data-server/ehcache"/>
+    <diskStore path="../temp/data-sync-server/ehcache"/>
 
     <!--
     name:                            缓存名称
@@ -32,7 +32,7 @@
                   timeToIdleSeconds="0" timeToLiveSeconds="600" memoryStoreEvictionPolicy="LRU"/>
 
     <cache
-            name="dataServerCache"
+            name="dataSyncServerCache"
             eternal="false"
             maxElementsInMemory="200"
             overflowToDisk="false"

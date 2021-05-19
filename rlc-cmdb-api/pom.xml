@@ -16,7 +16,7 @@
     </parent>
     <groupId>com.rlc</groupId>
     <artifactId>rlc-cmdb-api</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1.1-SNAPSHOT</version>
     <name>rlc-cmdb-api</name>
     <description>Demo project for Spring Boot</description>
     <packaging>jar</packaging>
