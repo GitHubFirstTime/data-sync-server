@@ -49,9 +49,9 @@ spring:
       #      jdbc-url: jdbc:oracle:thin:@10.170.6.79:1521/fmbdb
       #      jdbc-url: jdbc:oracle:thin:@192.168.2.250:1521:db11g
       url: jdbc:oracle:thin:@192.168.2.250:1521:db11g
-      username: fmb
+      username: fmb_demo
       #      password: enc:HD3g2WHCththCTGJPLhXtQ==
-      password: 123456 #enc:R/WRQAHCP+mtqLsf5swo0g==
+      password: fmb123456 #enc:R/WRQAHCP+mtqLsf5swo0g==
       # 下面为连接池的补充设置，应用到上面所有数据源中
       # 初始化大小，最小，最大
       initialSize: 1
@@ -91,8 +91,8 @@ spring:
       #      username: report
       #      password: 1
       url: jdbc:oracle:thin:@192.168.2.250:1521:db11g
-      username: fmb
-      password: 123456 #enc:R/WRQAHCP+mtqLsf5swo0g==
+      username: fmb_demo
+      password: fmb123456 #enc:R/WRQAHCP+mtqLsf5swo0g==
       # 下面为连接池的补充设置，应用到上面所有数据源中
       # 初始化大小，最小，最大
       initialSize: 1

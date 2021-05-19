@@ -86,7 +86,11 @@ public class DataSourceAspect {
         }
         MethodSignature methodSignature = (MethodSignature) point.getSignature();
         dataSource = methodSignature.getMethod().getAnnotation(DS.class);
-        log.info("使用方法级数据源注解");
+        if(Objects.nonNull(dataSource)){
+            log.warn("方法级数据源注解,值为空！");
+        }else{
+            log.info("使用方法级数据源注解");
+        }
         return dataSource;
 
 //        MethodSignature signature = (MethodSignature) point.getSignature();

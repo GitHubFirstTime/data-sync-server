@@ -15,8 +15,8 @@ import java.util.Map;
 
 @Service
 //@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Throwable.class)
+@DS("mesdb")
 public class EqpService extends CrudService<EqpDao, EqpDTO> {
-    @DS("mesdb")
     public List<EqpDTO> findList(EqpDTO eqpDTO){
         return super.findList(eqpDTO);
     }
